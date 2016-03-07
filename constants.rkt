@@ -5,7 +5,33 @@
   c-issues-menu-items
   c-issues-url)
 
+
+; menu-items
+(define-struct t-menu-item
+  (name option))
+
+; menu
+(define-struct t-menu
+  (title menu-items))
+
+; create menu-issues
+(define menu-issues
+  (make-t-menu "Issue management"
+   (make-t-menu-item "test1" "i")))
+
+(struct menu-item
+  (name option))
+
+; menu
+(struct menu
+  (title
+    (list menu-item)
+
+
 ; menu-issues
+(define menu-issues
+  "Issue management"
+  (("test" "i")))
 (define c-issues-menu-title "Issue management")
 (define c-issues-menu-items
   (list
