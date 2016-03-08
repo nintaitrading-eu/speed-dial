@@ -1,10 +1,11 @@
 #lang racket
 
 ;(require "menu-main.rkt")
+(require "constants.rkt")
 (require 2htdp/batch-io) ;read-lines
 
 ;; constants
-(define C-SPEED-DIAL-CONF "speed-dial.conf")
+
 
 ;; code
 (define (filter-comment-lines a-lines)
