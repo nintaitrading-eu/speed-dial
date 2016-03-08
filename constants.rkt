@@ -2,10 +2,12 @@
 
 (provide
   C-SPEED-DIAL-CONF
+  C-COMMENT-CHARS
   t-menu-item
   t-menu)
 
 (define C-SPEED-DIAL-CONF "speed-dial.conf")
+(define C-COMMENT-CHARS '("#"))
 
 ; menu-item
 (struct t-menu-item
