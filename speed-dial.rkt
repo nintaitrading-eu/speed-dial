@@ -27,12 +27,6 @@
      (not (equal? (string-length (string-trim a-string)) 0)))
       a-stringlist))
 
-; load-menus-from-file:
-; Main logic that loads all the menu info
-; from the configuration file.
-(define (load-menus-from-file a-file)
-  (filter-empty-strings (load-lines-from-file a-file)))
-
 ; load-lines-from-file:
 ; Loads all lines from a file, ignoring comments.
 (define (load-lines-from-file a-file)
@@ -40,6 +34,12 @@
     (map (lambda (a-comment-char)
       (filter-comment-lines
         (read-lines a-file) a-comment-char)) C-COMMENT-CHARS)))
+
+; load-menus-from-file:
+; Main logic that loads all the menu info
+; from the configuration file.
+(define (load-menus-from-file a-file)
+  (filter-empty-strings (load-lines-from-file a-file)))
 
 ;; Main
 (load-menus-from-file C-SPEED-DIAL-CONF)
