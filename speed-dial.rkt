@@ -24,14 +24,14 @@
 ; Removes empty strings from a list of strings.
 (define (filter-empty-strings a-stringlist)
   (filter (lambda (a-string)
-     (not (equal? (string-length (string-trim a-string) 0))))
+     (not (equal? (string-length (string-trim a-string)) 0)))
       a-stringlist))
 
 ; load-menus-from-file:
 ; Main logic that loads all the menu info
 ; from the configuration file.
 (define (load-menus-from-file a-file)
-  (load-lines-from-file a-file))
+  (filter-empty-strings (load-lines-from-file a-file)))
 
 ; load-lines-from-file:
 ; Loads all lines from a file, ignoring comments.
