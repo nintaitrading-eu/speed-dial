@@ -6,6 +6,16 @@
 
 ;; constants
 
+; split-list-of-strings:
+; Gets a list of <delimiter>-separated strings
+; and turns it into a list of a list of strings
+; Example:
+; ("test1a;test1b;test1c" "test2a;;test2c")
+; -> (("test1a" "test1b" "test1c") ("test2a" "" "test2c"))
+(define (split-list-of-strings a-list-of-strings a-delimiter)
+  (map (lambda (a-string)
+    (string-split a-string a-delimiter)) a-list-of-strings))
+
 ; take-first-char:
 ; Take first char of string, unless string is empty.
 (define (take-first-char a-string)
@@ -39,10 +49,10 @@
 ; Main logic that loads all the menu info
 ; from the configuration file.
 (define (load-menus-from-file a-file)
-  (filter-empty-strings (load-lines-from-file a-file)))
+  (split-list-of-strings
+    (filter-empty-strings (load-lines-from-file a-file))
+    C-DELIMITER))
 
 ;; Main
 (load-menus-from-file C-SPEED-DIAL-CONF)
 ;(show-menu-main)
-
-

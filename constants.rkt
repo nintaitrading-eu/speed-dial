@@ -3,11 +3,13 @@
 (provide
   C-SPEED-DIAL-CONF
   C-COMMENT-CHARS
+  C-DELIMITER
   t-menu-item
   t-menu)
 
 (define C-SPEED-DIAL-CONF "speed-dial.conf")
 (define C-COMMENT-CHARS '("#"))
+(define C-DELIMITER ";")
 
 ; menu-item
 (struct t-menu-item
