@@ -54,5 +54,10 @@
     C-DELIMITER))
 
 ;; Main
-(load-menus-from-file C-SPEED-DIAL-CONF)
+(define list-of-menus (
+  load-menus-from-file C-SPEED-DIAL-CONF))
+list-of-menus
+; TODO: filter list-of-menus on a certain ID (add ID to file?)
+; TODO: map write function to list-of-menus
+; TODO: sort list-of-menus first?
 ;(show-menu-main)
