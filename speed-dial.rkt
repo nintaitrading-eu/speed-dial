@@ -53,10 +53,28 @@
     (filter-empty-strings (load-lines-from-file a-file))
     C-DELIMITER))
 
+; filter-list-of-menus:
+; Filter the list-of-menus, to show only
+; a certain type of menus.
+; Example:
+; (("1" "Menu issues" "option 1" ...) ("2" "Menu issues" "option 2" ...) ("3" "Menu blabla" "option A" ...))
+; gives, for filter on "Menu issues":
+; (("1" "Menu issues" "option 1" ...) ("2" "Menu issues" "option 2" ...))
+; TODO: finish this
+; TODO: don't use Menu issues as a category, but use an id.
+(define (filter-list-of-menus a-category-id)
+  ; TODO: make function that returns a shortened list, like described above
+  (filter (lambda (a-list)) a-category-id))
+
 ;; Main
 (define list-of-menus (
   load-menus-from-file C-SPEED-DIAL-CONF))
+(writeln 'debug >>> list-of-menus:)
 list-of-menus
+(writeln 'debug >>> Option of second entry)
+(list-ref (list-ref list-of-menus 1) 1)
+(writeln 'debug >>> filtered issues menu)
+(filter
 ; TODO: filter list-of-menus on a certain ID (add ID to file?)
 ; TODO: map write function to list-of-menus
 ; TODO: sort list-of-menus first?
