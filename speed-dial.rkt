@@ -4,7 +4,9 @@
 (require "constants.rkt")
 (require 2htdp/batch-io) ;read-lines
 
-;; constants
+;-------------------------------------------
+; functions
+;-------------------------------------------
 
 ; split-list-of-strings:
 ; Gets a list of <delimiter>-separated strings
@@ -63,14 +65,17 @@
 ; TODO: finish this
 ; TODO: don't use Menu issues as a category, but use an id.
 (define (filter-list-of-menus a-category-id)
-  (filter (lambda (a-list)) a-category-id))
+  (filter (lambda (a-list) (??? a-list)) a-category-id))
 
 ; Map a filter to a list. Add this above?
 ;(define (category-id-is-equal-to a-list a-category-id)
 ;    (map (lambda (a-list)
 ;      (list-ref a-list 0)) a-list) a-category-id))
 
-;; Main
+;-------------------------------------------
+; Main
+;-------------------------------------------
+
 (define list-of-menus (
   load-menus-from-file C-SPEED-DIAL-CONF))
 (writeln "debug >>> list-of-menus:")
