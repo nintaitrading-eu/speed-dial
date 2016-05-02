@@ -30,9 +30,9 @@
 ; TODO: don't use Menu issues as a category, but use an id.
 ; TODO: temporarily disabled by just returning the list.
 (define (filter-list-of-menus a-list a-category-id)
-  (cons a-list))
-;(define (filter-list-of-menus a-category-id)
-;  (filter (lambda (a-list) (??? a-list)) a-category-id))
+  (filter (lambda (x) (equal? (car x) a-category-id)) a-list))
+;(define (filter-list-of-menus a-list a-category-id)
+;  (filter (lambda (x) (equal? (list-ref x 0) a-category-id)) a-list))
 
 ; Map a filter to a list. Add this above?
 ;(define (category-id-is-equal-to a-list a-category-id)
@@ -50,7 +50,7 @@ list-of-menus
 (writeln "debug >>> Option of second entry")
 (list-ref (list-ref list-of-menus 1) 1)
 (writeln "debug >>> filtered issues menu")
-;(filter-list-of-menus list-of-menus 1)
+(filter-list-of-menus list-of-menus "1")
 ; TODO: filter list-of-menus on a certain ID (add ID to file?)
 ; TODO: map write function to list-of-menus
 ; TODO: sort list-of-menus first?
