@@ -1,12 +1,14 @@
 #lang racket
 
 (provide
-  split-list-of-strings,
-  take-first-char,
-  filter-comment-lines,
-  filter-empty-strings,
+  split-list-of-strings
+  take-first-char
+  filter-comment-lines
+  filter-empty-strings
   load-lines-from-file
   )
+
+(require 2htdp/batch-io) ;read-lines
 
 
 ; split-list-of-strings:
@@ -42,9 +44,9 @@
 
 ; load-lines-from-file:
 ; Loads all lines from a file, ignoring comments.
-(define (load-lines-from-file a-file)
+(define (load-lines-from-file a-file a-comment-chars)
   (car
     (map (lambda (a-comment-char)
       (filter-comment-lines
-        (read-lines a-file) a-comment-char)) C-COMMENT-CHARS)))
+        (read-lines a-file) a-comment-char)) a-comment-chars)))
 
