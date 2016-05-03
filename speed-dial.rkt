@@ -32,11 +32,12 @@
 ; retrieve-menu-categories:
 ; Retrieves the categories from the list-of-menus,
 ; so we know what categories we have. Only
-; the unique values are returned, sorted by name.
-(define (retrieve-menu-categories a-list)
+; the unique values are returned, sorted by name. 
+(define (retrieve-menu-categories a-list-of-menus)
   (sort
-    (remove-duplicates (retrieve-menu-categories-all a-list))
-    string<?))
+    ;(remove-duplicates (retrieve-menu-categories-all a-list))
+    (remove-duplicates a-list-of-menus)
+    #:key car string<?))
 
 ; retrieve-menu-categories-all:
 ; Retrieves the categories from the list-of-menus,
@@ -45,15 +46,16 @@
 ; that gets the categories.
 ; TODO: implement loop?
 ; TODO: use let?
-(define (retrieve-menu-categories-all a-list)
-  (map (lambda(x) (list-ref x 1)) a-list))
+(define (retrieve-menu-categories-all a-list-of-menus)
+  (map (lambda(x) (list-ref x 1)) a-list-of-menus))
 
 ; write-main-menu:
 ; Write the main menu items, based on a given list
 ; of options. The retrieved categories are normally used for this.
 ; TODO: add option char? Perhaps retrieve it in the category list?
-(define (write-main-menu a-list)
-  (map (lambda(x) (displayln x)) a-list))
+(define (write-main-menu a-menus)
+  (map (lambda(x) (format "~a. ~a~n" (list-ref x 1) (list-ref x 0))) a-menus)
+       )
 
 ;-------------------------------------------
 ; Main
@@ -61,14 +63,11 @@
 
 (define list-of-menus
   (load-menus-from-file C-SPEED-DIAL-MENUS))
-(writeln "debug >>> list-of-menus:")
-list-of-menus
-(writeln "debug >>> Option of second entry")
-(list-ref (list-ref list-of-menus 1) 1)
 (writeln "debug >>> filtered issues menu")
 (filter-list-of-menus list-of-menus "1")
 (writeln "debug >>> categories")
 (retrieve-menu-categories list-of-menus)
-(writeln "debug >>> main menu")
+(newline)
+(newline)
 (write-main-menu (retrieve-menu-categories list-of-menus))
 ;(show-menu-main)
