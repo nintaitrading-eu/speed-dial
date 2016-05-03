@@ -29,6 +29,23 @@
 (define (filter-list-of-menus a-list a-category-id)
   (filter (lambda (x) (equal? (car x) a-category-id)) a-list))
 
+; retrieve-menu-categories:
+; Retrieves the categories from the list-of-menus,
+; so we know what categories we have. Only
+; the unique values are returned, sorted by name.
+(define (retrieve-menu-categories a-list)
+  (remove-duplicates (retrieve-menu-categories-all a-list)))
+
+; retrieve-menu-categories-all:
+; Retrieves the categories from the list-of-menus,
+; so we know what categories we have.
+; TODO: finish this: change a-list to a call to a loop
+; that gets the categories.
+; TODO: implement loop?
+(define (retrieve-menu-categories-all a-list)
+  ( a-list))
+
+
 ;-------------------------------------------
 ; Main
 ;-------------------------------------------
