@@ -53,7 +53,7 @@
 ; of options. The retrieved categories are normally used for this.
 ; TODO: add option char? Perhaps retrieve it in the category list?
 (define (write-main-menu a-list)
-  (map (lambda(x) (writeln x)) a-list))
+  (map (lambda(x) (displayln x)) a-list))
 
 ;-------------------------------------------
 ; Main
