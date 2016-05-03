@@ -34,7 +34,9 @@
 ; so we know what categories we have. Only
 ; the unique values are returned, sorted by name.
 (define (retrieve-menu-categories a-list)
-  (remove-duplicates (retrieve-menu-categories-all a-list)))
+  (sort
+    (remove-duplicates (retrieve-menu-categories-all a-list))
+    string<?))
 
 ; retrieve-menu-categories-all:
 ; Retrieves the categories from the list-of-menus,
