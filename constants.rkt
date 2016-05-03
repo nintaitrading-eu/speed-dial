@@ -1,13 +1,15 @@
 #lang racket
 
 (provide
-  C-SPEED-DIAL-CONF
+  C-SPEED-DIAL-MENUS
+  C-SPEED-DIAL-MENU-ITEMS
   C-COMMENT-CHARS
   C-DELIMITER
   t-menu-item
   t-menu)
 
-(define C-SPEED-DIAL-CONF "speed-dial.conf")
+(define C-SPEED-DIAL-MENUS "speed-dial-menus.conf")
+(define C-SPEED-DIAL-MENU-ITEMS "speed-dial-menu-items.conf")
 (define C-COMMENT-CHARS '("#"))
 (define C-DELIMITER ";")
 

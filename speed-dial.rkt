@@ -60,7 +60,7 @@
 ;-------------------------------------------
 
 (define list-of-menus
-  (load-menus-from-file C-SPEED-DIAL-CONF))
+  (load-menus-from-file C-SPEED-DIAL-MENUS))
 (writeln "debug >>> list-of-menus:")
 list-of-menus
 (writeln "debug >>> Option of second entry")
