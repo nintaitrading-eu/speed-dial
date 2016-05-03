@@ -23,21 +23,11 @@
 ; Filter the list-of-menus, to show only
 ; a certain type of menus.
 ; Example:
-; (("1" "Menu issues" "option 1" ...) ("2" "Menu issues" "option 2" ...) ("3" "Menu blabla" "option A" ...))
-; gives, for filter on "Menu issues":
-; (("1" "Menu issues" "option 1" ...) ("2" "Menu issues" "option 2" ...))
-; TODO: finish this
-; TODO: don't use Menu issues as a category, but use an id.
-; TODO: temporarily disabled by just returning the list.
+; (("1" "Menu issues" "option 1" ...) ("1" "Menu issues" "option 2" ...) ("2" "Menu blabla" "option A" ...))
+; gives, for filter on 1":
+; (("1" "Menu issues" "option 1" ...) ("1" "Menu issues" "option 2" ...))
 (define (filter-list-of-menus a-list a-category-id)
   (filter (lambda (x) (equal? (car x) a-category-id)) a-list))
-;(define (filter-list-of-menus a-list a-category-id)
-;  (filter (lambda (x) (equal? (list-ref x 0) a-category-id)) a-list))
-
-; Map a filter to a list. Add this above?
-;(define (category-id-is-equal-to a-list a-category-id)
-;    (map (lambda (a-list)
-;      (list-ref a-list 0)) a-list) a-category-id))
 
 ;-------------------------------------------
 ; Main
@@ -51,7 +41,5 @@ list-of-menus
 (list-ref (list-ref list-of-menus 1) 1)
 (writeln "debug >>> filtered issues menu")
 (filter-list-of-menus list-of-menus "1")
-; TODO: filter list-of-menus on a certain ID (add ID to file?)
-; TODO: map write function to list-of-menus
 ; TODO: sort list-of-menus first?
 ;(show-menu-main)
