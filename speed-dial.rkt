@@ -42,8 +42,9 @@
 ; TODO: finish this: change a-list to a call to a loop
 ; that gets the categories.
 ; TODO: implement loop?
+; TODO: use let?
 (define (retrieve-menu-categories-all a-list)
-  ( a-list))
+  (map (lambda(x) (list-ref x 1)) a-list))
 
 
 ;-------------------------------------------
@@ -58,5 +59,6 @@ list-of-menus
 (list-ref (list-ref list-of-menus 1) 1)
 (writeln "debug >>> filtered issues menu")
 (filter-list-of-menus list-of-menus "1")
-; TODO: sort list-of-menus first?
+(writeln "debug >>> categories")
+(retrieve-menu-categories list-of-menus)
 ;(show-menu-main)
