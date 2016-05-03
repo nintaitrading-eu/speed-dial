@@ -48,6 +48,12 @@
 (define (retrieve-menu-categories-all a-list)
   (map (lambda(x) (list-ref x 1)) a-list))
 
+; write-main-menu:
+; Write the main menu items, based on a given list
+; of options. The retrieved categories are normally used for this.
+; TODO: add option char? Perhaps retrieve it in the category list?
+(define (write-main-menu a-list)
+  (map (lambda(x) (writeln x)) a-list))
 
 ;-------------------------------------------
 ; Main
@@ -63,4 +69,6 @@ list-of-menus
 (filter-list-of-menus list-of-menus "1")
 (writeln "debug >>> categories")
 (retrieve-menu-categories list-of-menus)
+(writeln "debug >>> main menu")
+(write-main-menu (retrieve-menu-categories list-of-menus))
 ;(show-menu-main)
