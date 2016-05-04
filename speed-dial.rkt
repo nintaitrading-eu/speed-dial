@@ -68,7 +68,7 @@
     (system "clear")
     (print-header "Main menu")
     (print-menu-main (retrieve-menu-categories a-list-of-menus))
-    (loop-choice a-list-of-menus (list "a" "i" "o"))
+    (loop-choice a-list-of-menus (list 'a 'i 'o))
     )
 
 ; loop-choice:
@@ -76,10 +76,16 @@
 ; TODO: make the choice condition dependend on a-choice-list.
 (define (loop-choice a-list-of-menus a-choice-list)
     (let ((l-choice (read)))
-    (cond ((eq? l-choice 'a) (printf "a chosen\n"))
+    (cond ((member l-choice a-choice-list) (run-choice l-choice a-list-of-menus))
           ((eq? l-choice 'q) (run-quit))
           (else (print-menu-error)))
     (show-menu-main a-list-of-menus)))
+
+; run-choice:
+; Execute the correct action, belonging to the chosen option
+; for that menu-item.
+(define (run-choice a-choice a-list-of-menus)
+  (printf "~a chosen\n" a-choice))
 
 ; list-of-menus:
 ; Get list-of-menus from the file, based on the
