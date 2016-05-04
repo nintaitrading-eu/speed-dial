@@ -4,6 +4,7 @@
   C-SPEED-DIAL-MENUS
   C-SPEED-DIAL-MENU-ITEMS
   C-COMMENT-CHARS
+  C-PROMPT
   C-DELIMITER
   t-menu-item
   t-menu)
@@ -12,6 +13,7 @@
 (define C-SPEED-DIAL-MENU-ITEMS "speed-dial-menu-items.conf")
 (define C-COMMENT-CHARS '("#"))
 (define C-DELIMITER ";")
+(define C-PROMPT "> ")
 
 ; menu-item
 (struct t-menu-item
