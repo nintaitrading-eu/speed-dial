@@ -52,22 +52,32 @@
 ; write-main-menu:
 ; Write the main menu items, based on a given list
 ; of options. The retrieved categories are normally used for this.
-; TODO: add option char? Perhaps retrieve it in the category list?
+; Note: used for-each instead of map. This is used for functions
+; that just do side-effects.
 (define (write-main-menu a-menus)
-  (map (lambda(x) (format "~a. ~a~n" (list-ref x 1) (list-ref x 0))) a-menus)
-       )
+  (for-each (lambda(x)
+    (fprintf (current-output-port) "~a. ~a\n" (list-ref x 1) (list-ref x 0)))
+    a-menus))
+
+; list-of-menus:
+; Get list-of-menus from the file, based on the
+; file location in the constants.rkt module.
+(define list-of-menus
+  (load-menus-from-file C-SPEED-DIAL-MENUS))
+
+; list-of-menu-items:
+; Get list-of-menu-items, for a given
+; menu-id.
+(define (list-of-menu-items a-menu-id)
+  ((list "item-test1" "item-test2" "item-test3")))
 
 ;-------------------------------------------
 ; Main
 ;-------------------------------------------
 
-(define list-of-menus
-  (load-menus-from-file C-SPEED-DIAL-MENUS))
-(writeln "debug >>> filtered issues menu")
-(filter-list-of-menus list-of-menus "1")
-(writeln "debug >>> categories")
-(retrieve-menu-categories list-of-menus)
-(newline)
-(newline)
+;(writeln "debug >>> filtered issues menu")
+;(filter-list-of-menus list-of-menus "1")
+;(writeln "debug >>> categories")
+;(retrieve-menu-categories list-of-menus)
 (write-main-menu (retrieve-menu-categories list-of-menus))
 ;(show-menu-main)
