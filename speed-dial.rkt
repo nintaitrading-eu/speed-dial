@@ -68,8 +68,20 @@
     (system "clear")
     (print-header "Main menu")
     (print-menu-main (retrieve-menu-categories a-list-of-menus))
-    ;(loop-choice-main)
+    (loop-choice a-list-of-menus (list "a" "i" "o"))
     )
+
+(define (loop-choice a-list-of-menus a-choice-list)
+  (lambda ()
+    (let ((l-choice (read)))
+    ;(cond ((eq? l-choice 'a) (show-menu-accounting))
+    ;      ((eq? l-choice 'd) (show-menu-development))
+    ;      ((eq? l-choice 't) (show-menu-trading))
+    ;      ((eq? l-choice 'i) (show-menu-issues))
+    ;      ((eq? l-choice 'q) (run-quit))
+    ;      (else (print-menu-error)))
+    (show-menu-main a-list-of-menus)))
+  )
 
 ; print-header:
 ; Prints a formatted header, with the given title.
