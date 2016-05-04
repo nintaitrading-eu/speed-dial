@@ -52,10 +52,8 @@
 ; write-main-menu:
 ; Write the main menu items, based on a given list
 ; of options. The retrieved categories are normally used for this.
-; Note: used for-each instead of map. This is used for functions
-; that just do side-effects.
 (define (write-main-menu a-menus)
-  (for-each (lambda(x)
+  (map (lambda(x)
     (fprintf (current-output-port) "~a. ~a\n" (list-ref x 1) (list-ref x 0)))
     a-menus))
 
