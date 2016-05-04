@@ -71,19 +71,15 @@
     (loop-choice a-list-of-menus (list "a" "i" "o"))
     )
 
+; loop-choice:
+; Loop that displays the menu, until an option is chosen.
+; TODO: make the choice condition dependend on a-choice-list.
 (define (loop-choice a-list-of-menus a-choice-list)
     (let ((l-choice (read)))
-    (cond ((eq? l-choice 'a) (printf "a chosen"))
+    (cond ((eq? l-choice 'a) (printf "a chosen\n"))
           ((eq? l-choice 'q) (run-quit))
           (else (print-menu-error)))
     (show-menu-main a-list-of-menus)))
-
-; print-header:
-; Prints a formatted header, with the given title.
-; TODO: make length of underlining dynamic.
-(define (print-header a-title)
-  (fprintf (current-output-port) "~a\n" a-title)
-  (fprintf (current-output-port) "-----------------------------\n"))
 
 ; list-of-menus:
 ; Get list-of-menus from the file, based on the

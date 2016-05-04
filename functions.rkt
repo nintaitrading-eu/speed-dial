@@ -9,12 +9,16 @@
 
 (require "constants.rkt")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Printing
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ; print-header:
-; Prints a hard-coded application header.
-(define print-header
-  (lambda ()
-    (printf "speed-dial v1.0~%")
-    (printf "---------------~%")))
+; Prints a formatted header, with the given title.
+; TODO: make length of underlining dynamic.
+(define (print-header a-title)
+  (fprintf (current-output-port) "~a\n" a-title)
+  (fprintf (current-output-port) "-----------------------------\n"))
 
 ; print-menu-error:
 ; Prints an error message when a given option is unknown.
@@ -29,6 +33,10 @@
   (lambda ()
     (printf C-PROMPT)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Other
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ; open-url:
 ; Opens a given url in firefox.
 ; TODO: Open in default browser.
@@ -41,5 +49,5 @@
 (define run-quit
   (lambda ()
     (system "clear")
-    (writeln "Bye.")
+    (printf "Bye.")
     (exit)))
