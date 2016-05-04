@@ -52,10 +52,31 @@
 ; write-main-menu:
 ; Write the main menu items, based on a given list
 ; of options. The retrieved categories are normally used for this.
-(define (write-main-menu a-menus)
+(define (print-menu-main a-menus)
   (map (lambda(x)
     (fprintf (current-output-port) "~a. ~a\n" (list-ref x 1) (list-ref x 0)))
-    a-menus))
+    a-menus)
+  (newline)
+  (display-prompt))
+
+; show-menu:
+; Show the menu, as given by the
+; list a-menus.
+; Note: Used for displaying the main menu.
+; This also starts the option parsing loop.
+(define (show-menu-main a-list-of-menus)
+    (system "clear")
+    (print-header "Main menu")
+    (print-menu-main (retrieve-menu-categories a-list-of-menus))
+    ;(loop-choice-main)
+    )
+
+; print-header:
+; Prints a formatted header, with the given title.
+; TODO: make length of underlining dynamic.
+(define (print-header a-title)
+  (fprintf (current-output-port) "~a\n" a-title)
+  (fprintf (current-output-port) "-----------------------------\n"))
 
 ; list-of-menus:
 ; Get list-of-menus from the file, based on the
@@ -77,5 +98,5 @@
 ;(filter-list-of-menus list-of-menus "1")
 ;(writeln "debug >>> categories")
 ;(retrieve-menu-categories list-of-menus)
-(write-main-menu (retrieve-menu-categories list-of-menus))
+(show-menu-main list-of-menus)
 ;(show-menu-main)
