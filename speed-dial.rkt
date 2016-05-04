@@ -93,12 +93,6 @@
 (define list-of-menus
   (load-menus-from-file C-SPEED-DIAL-MENUS))
 
-; list-of-menu-items:
-; Get list-of-menu-items, for a given
-; menu-id.
-(define (list-of-menu-items a-menu-id)
-  ((list "item-test1" "item-test2" "item-test3")))
-
 ;-------------------------------------------
 ; Main
 ;-------------------------------------------
