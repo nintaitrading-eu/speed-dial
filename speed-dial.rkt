@@ -32,7 +32,7 @@
 ; retrieve-menu-items:
 ; Retrieves the menu-items with a given a-parent-id,
 ; so we know what items we have. Only
-; the unique values are returned, sorted by name. 
+; the unique values are returned, sorted by name.
 ; TODO: add a parent-id filter
 ; TODO: find out how to replace car with list-ref 1
 (define (retrieve-menu-items a-menu-items a-parent-id)
