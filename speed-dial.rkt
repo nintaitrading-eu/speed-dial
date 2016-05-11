@@ -44,7 +44,6 @@
 ; Example:
 ; '(("1" "1" "a"...) ("1" "2" "b"...))
 ; will give '("a" "b") as a result.
-; TODO: finish this.
 (define (retrieve-menu-options a-menu-items a-parent-menu-id)
   (map (lambda (x) (string->symbol x))
     (map (lambda (x) (list-ref x 3)) (retrieve-menu-items a-menu-items a-parent-menu-id))))
@@ -53,11 +52,16 @@
 ; Write the main menu items, based on a given list
 ; of options. The retrieved categories are normally used for this.
 (define (print-menu a-menu-items)
-  (map (lambda(x)
-    (fprintf (current-output-port) "[~a] ~a\n" (list-ref x 3) (list-ref x 2)))
-    a-menu-items)
-  (newline)
-  (display-prompt))
+  (map (lambda (x)
+    (printf "[~a] ~a\n" (list-ref x 3) (list-ref x 2)))
+    a-menu-items))
+
+; print-menu-ending:
+; Add extra options to the menu, for quitting
+; the program and/or going back one level.
+(define (print-menu-ending a-parent-menu-id)
+  (if (> a-parent-menu-id 0) (printf "[b] back\n") (printf ""))
+  (if (equal? a-parent-menu-id 0) (printf "[q] quit\n") (printf "")))
 
 ; show-menu:
 ; Show the menu, as given by the
@@ -65,10 +69,13 @@
 ; Note: Used for displaying the main menu.
 ; This also starts the option parsing loop.
 (define (show-menu a-menu-items a-parent-menu-id)
-    (system "clear")
-    (print-header "Menu")
-    (print-menu (retrieve-menu-items a-menu-items a-parent-menu-id))
-    (loop-choice a-menu-items a-parent-menu-id (retrieve-menu-options a-menu-items a-parent-menu-id)))
+  (system "clear")
+  (print-header "Menu")
+  (print-menu (retrieve-menu-items a-menu-items a-parent-menu-id))
+  (print-menu-ending a-parent-menu-id)
+  (newline)
+  (display-prompt)
+  (loop-choice a-menu-items a-parent-menu-id (retrieve-menu-options a-menu-items a-parent-menu-id)))
 
 ; loop-choice:
 ; Loop that displays the menu, until an option is chosen.
