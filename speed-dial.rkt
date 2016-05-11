@@ -26,26 +26,26 @@
 ; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...) ("0" "2" "Menu blabla" "option A" ...))
 ; gives, for filter on 1":
 ; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...))
-(define (filter-menu-items a-list a-parent-id)
-  (filter (lambda (x) (equal? (list-ref x 0) a-parent-id)) a-list))
+(define (filter-menu-items a-menu-items a-parent-id)
+  (filter (lambda (x) (equal? (string->number (list-ref x 0)) a-parent-id)) a-menu-items))
 
 ; retrieve-menu-items:
 ; Retrieves the menu-items with a given a-parent-id,
 ; so we know what items we have. Only
 ; the unique values are returned, sorted by name.
-; TODO: add a parent-id filter
 ; TODO: find out how to replace car with list-ref 1
 (define (retrieve-menu-items a-menu-items a-parent-id)
+;  (filter-menu-items a-menu-items a-parent-id))
   (sort
     (remove-duplicates (filter-menu-items a-menu-items a-parent-id))
-    #:key car string<?))
+    #:key (lambda (x) (car (cdr x))) string<?))
 
 ; write-main-menu:
 ; Write the main menu items, based on a given list
 ; of options. The retrieved categories are normally used for this.
 (define (print-menu a-menu-items)
   (map (lambda(x)
-    (fprintf (current-output-port) "~a. ~a\n" (list-ref x 1) (list-ref x 2)))
+    (fprintf (current-output-port) "[~a] ~a\n" (list-ref x 3) (list-ref x 2)))
     a-menu-items)
   (newline)
   (display-prompt))
@@ -79,7 +79,7 @@
 ; for that menu-item.
 (define (run-choice a-choice a-list-of-menus)
   (printf "~a chosen\n" a-choice)
-  (sleep 3))
+  (sleep 1))
 
 ; list-of-menus:
 ; Get list-of-menus from the file, based on the
