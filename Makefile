@@ -14,7 +14,7 @@ options:
 
 speed-dial: 
 	@echo raco exe speed-dial.rkt
-	@${RACO} exe $@.rkt
+	@${RACO} $@.rkt
 
 clean:
 	@echo cleaning...
