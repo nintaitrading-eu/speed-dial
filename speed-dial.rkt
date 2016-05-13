@@ -6,6 +6,7 @@
     "functions.rkt"
     "racket_general/functions.rkt")
 (require 2htdp/batch-io) ;read-lines
+(require basedir)
 
 ;-------------------------------------------
 ; functions
