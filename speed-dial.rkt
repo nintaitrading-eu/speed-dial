@@ -98,13 +98,12 @@
 ; list-of-menus:
 ; Get list-of-menus from the file, based on the
 ; file location in the constants.rkt module.
-(define list-of-menus
-  ((current-basedir-program-name "speed-dial")
-  (load-menus-from-file
-    (path->string (writable-config-file C-SPEED-DIAL-MENU-ITEMS)))))
+(define (list-of-menus a-menu-items-conf)
+  (current-basedir-program-name "speed-dial")
+  (load-menus-from-file (path->string (writable-config-file a-menu-items-conf))))
 
 ;-------------------------------------------
 ; Main
 ;-------------------------------------------
 
-(show-menu list-of-menus 0) ; Show main menu
+(show-menu (list-of-menus C-SPEED-DIAL-MENU-ITEMS) 0) ; Show main menu
