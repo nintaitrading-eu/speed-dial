@@ -99,7 +99,9 @@
 ; Get list-of-menus from the file, based on the
 ; file location in the constants.rkt module.
 (define list-of-menus
-  (load-menus-from-file C-SPEED-DIAL-MENU-ITEMS))
+  ((current-basedir-program-name "speed-dial")
+  (load-menus-from-file
+    (path->string (writable-config-file C-SPEED-DIAL-MENU-ITEMS)))))
 
 ;-------------------------------------------
 ; Main
