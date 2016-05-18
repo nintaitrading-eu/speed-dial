@@ -96,14 +96,20 @@
   (sleep 1))
 
 ; list-of-menus:
-; Get list-of-menus from the file, based on the
-; file location in the constants.rkt module.
+; Get list-of-menus from the given file location.
+; Defaults to $XDG_CONF_DIR/speed-dial/speed-dial-menu-items.conf,
+; if no location was given, based on the
+; filename in the constants.rkt module.
 (define (list-of-menus a-menu-items-conf)
   (current-basedir-program-name "speed-dial")
-  (load-menus-from-file (path->string (writable-config-file a-menu-items-conf))))
+  (cond
+    ((equal? (string-trim a-menu-items-conf) "") (
+      (load-menus-from-file (path->string (writable-config-file C-SPEED-DIAL-MENU-ITEMS)))))
+    (else (load-menus-from-file a-menu-items-conf))))
 
 ;-------------------------------------------
 ; Main
 ;-------------------------------------------
 
+; TODO: Allow specifying a file on the command line?
 (show-menu (list-of-menus C-SPEED-DIAL-MENU-ITEMS) 0) ; Show main menu
