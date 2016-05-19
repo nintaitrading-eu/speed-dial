@@ -103,8 +103,8 @@
 (define (list-of-menus a-menu-items-conf)
   (current-basedir-program-name "speed-dial")
   (cond
-    ((equal? (string-trim a-menu-items-conf) "") (
-      (load-menus-from-file (path->string (writable-config-file C-SPEED-DIAL-MENU-ITEMS)))))
+    ((equal? (string-trim a-menu-items-conf) "") 
+      (load-menus-from-file (path->string (writable-config-file C-SPEED-DIAL-MENU-ITEMS))))
     (else (load-menus-from-file a-menu-items-conf))))
 
 ;-------------------------------------------
@@ -112,4 +112,6 @@
 ;-------------------------------------------
 
 ; TODO: Allow specifying a file on the command line?
-(show-menu (list-of-menus C-SPEED-DIAL-MENU-ITEMS) 0) ; Show main menu
+;(show-menu (list-of-menus C-SPEED-DIAL-MENU-ITEMS) 0) ; Show main menu
+(show-menu (list-of-menus "") 0) ; Show main menu
+;(show-menu (list-of-menus "/home/rockwolf/.config/speed-dial/speed-dial-menu-items.conf") 0) ; Show main menu
