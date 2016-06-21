@@ -4,7 +4,7 @@
 (require
     "constants.rkt"
     "functions.rkt"
-    "racket_general/functions.rkt")
+    "racket_generic/functions.rkt")
 (require 2htdp/batch-io) ;read-lines
 (require basedir)
 

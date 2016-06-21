@@ -1,0 +1,3 @@
+[submodule "racket_generic"]
+	path = racket_generic
+	url = https://github.com/rockwolf/racket_generic.git
