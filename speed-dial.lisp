@@ -10,8 +10,17 @@
 (defvar *c-comment-chars* '("#"))
 (defvar *c-delimiter* ";")
 (defvar *c-prompt* "> ")
+;(defvar *c-sh-cmd* "/bin/sh") ; FreeBSD
+(defvar *c-sh-cmd* "C:\\Program Files (x86)\\Gow\\bin\\bash.exe") ; Windows
 
 ;;; Functions
+
+(defun sh (cmd)
+  "A multi-implementation function equivalent for the C function system."
+  #+clisp (shell cmd)
+  #+ecl (si:system cmd)
+  #+sbcl (sb-ext:run-program *c-sh-cmd* (list "-c" cmd) :input nil :output *standard-output*)
+  #+clozure (ccl:run-program *c-sh-cmd* (list "-c" cmd) :input nil :output *standard-output*))
 
 (define (load-menus-from-file a-file)
   "Main logic that loads all the menu info from the configuration file."
@@ -36,7 +45,7 @@ the program and/or going back one level."
   "Show the menu, as given by the list a-menus.
 Note: Used for displaying the main menu.
 This also starts the option parsing loop."
-  (system "clear")
+  (sh "clear")
   (print-header "Menu")
   (print-menu (retrieve-menu-items a-menu-items a-parent-menu-id))
   (print-menu-ending a-parent-menu-id)
