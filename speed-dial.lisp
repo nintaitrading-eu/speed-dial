@@ -62,7 +62,7 @@
   "Write the main menu items, based on a given list
 of options. The retrieved categories are normally used for this."
   (map (lambda (x)
-    (format t "[~a] ~a~%" (list-ref x 3) (list-ref x 2)))
+    (format t "[~a] ~a~%" (nth 3 x) (nth 2 x)))
     a-menu-items))
 
 (defun print-menu-ending (a-parent-menu-id)
