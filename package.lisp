@@ -1,5 +1,6 @@
 ;;;; package.lisp
 
 (defpackage #:speed-dial
-  (:use #:cl))
+  (:use #:cl)
+  (:export test))
 

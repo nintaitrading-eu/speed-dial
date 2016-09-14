@@ -13,6 +13,9 @@
 ;(defvar *c-sh-cmd* "/bin/sh") ; FreeBSD
 (defvar *c-sh-cmd* "C:\\Program Files (x86)\\Gow\\bin\\bash.exe") ; Windows
 
+;;; menu-functions.lisp
+
+
 ;;; functions.lisp
 (defun print-header (a-title)
   "Prints a formatted header, with the given title."
@@ -83,6 +86,7 @@ This also starts the option parsing loop."
 
 (defun main ()
   " Main entry point to the application."
-  (show-menu (list-of-menus "") 0))
+  ;(show-menu (list-of-menus "") 0))
+  (test))
 
 (main)
