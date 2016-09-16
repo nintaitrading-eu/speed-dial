@@ -38,7 +38,7 @@
   "Prints the menu-item."
   (format t "~a~%" a-menu-item))
 
-(define print-menu-footer ()
+(defun print-menu-footer ()
   "Prints a general menu-footer."
   (progn
     (format t "b - Back~%")
