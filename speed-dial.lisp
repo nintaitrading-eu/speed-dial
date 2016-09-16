@@ -21,7 +21,7 @@
     (filter-empty-strings (load-lines-from-file a-file *c-comment-chars*))
     *c-delimiter*))
 
-(defun (filter-menu-items a-menu-items a-parent-menu-id)
+(defun filter-menu-items (a-menu-items a-parent-menu-id)
   "Filter the list-of-menus, to show only a certain type of menus."
 ; Example:
 ; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...) ("0" "2" "Menu blabla" "option A" ...))
@@ -98,7 +98,8 @@ This also starts the option parsing loop."
 Defaults to $XDG_CONF_DIR/speed-dial/speed-dial-menu-items.conf,
 if no location was given, based on the
 filename in the constants.rkt module."
-  (current-basedir-program-name "speed-dial")
+  ;(current-basedir-program-name "speed-dial")
+  (concatenate (my-getenv "XDG_BASE_DIR") "/speed-dial")
   (cond
     ((equal? (string-trim a-menu-items-conf) "") 
       (load-menus-from-file (path->string (writable-config-file C-SPEED-DIAL-MENU-ITEMS))))

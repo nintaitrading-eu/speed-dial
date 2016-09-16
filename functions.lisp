@@ -33,6 +33,21 @@
   #+sbcl (sb-ext:run-program *c-sh-cmd* (list "-c" cmd) :input nil :output *standard-output*)
   #+clozure (ccl:run-program *c-sh-cmd* (list "-c" cmd) :input nil :output *standard-output*))
 
+(defun my-getenv (name &optional default)
+  "A multi-implementation function, for retrieving environment variables."
+    #+CMU
+    (let ((x (assoc name ext:*environment-list*
+                    :test #'string=)))
+      (if x (cdr x) default))
+    #-CMU
+    (or
+     #+Allegro (sys:getenv name)
+     #+CLISP (ext:getenv name)
+     #+ECL (si:getenv name)
+     #+SBCL (sb-unix::posix-getenv name)
+     #+LISPWORKS (lispworks:environment-variable name)
+     default))
+
 (defun run-quit ()
   "Quits, with a fancy message."
   (progn
