@@ -7,6 +7,7 @@
   :depends-on (#:quicklisp)
   :serial t
   :components ((:file "package")
+               (:file "menu-functions")
                (:file "speed-dial" :depends-on ("package" "menu-functions"))
-               (:file "menu-functions")))
+               ))
 

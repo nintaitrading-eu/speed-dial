@@ -6,4 +6,4 @@
 (in-package :speed-dial)
 
 (defun test ()
-  (format t "[DEBUG] menu-functions.lisp~%")
+  (format t "[DEBUG] menu-functions.lisp~%"))
