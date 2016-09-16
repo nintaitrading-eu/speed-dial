@@ -24,8 +24,7 @@
 
 (defun display-prompt ()
   "Displays a prompt."
-  (lambda ()
-    (printf *c-prompt*)))
+    (printf *c-prompt*))
 
 (defun sh (cmd)
   "A multi-implementation function equivalent for the C function system."
