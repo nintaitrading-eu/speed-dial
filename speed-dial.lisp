@@ -27,7 +27,7 @@
 ; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...) ("0" "2" "Menu blabla" "option A" ...))
 ; gives, for filter on "1":
 ; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...))
-  (filter (lambda (x) (equal? (string->number (list-ref x 0)) a-parent-menu-id)) a-menu-items))
+  (filter (lambda (x) (equal (string->number (list-ref x 0)) a-parent-menu-id)) a-menu-items))
 
 ; TODO: lots of fixes needed here.
 (defun retrieve-menu-items (a-menu-items a-parent-menu-id)
@@ -63,7 +63,7 @@ of options. The retrieved categories are normally used for this."
   "Add extra options to the menu, for quitting
 the program and/or going back one level."
   (if (> a-parent-menu-id 0) (printf "[b] back~%") (printf ""))
-  (if (equal? a-parent-menu-id 0) (printf "[q] quit~%") (printf "")))
+  (if (equal a-parent-menu-id 0) (printf "[q] quit~%") (printf "")))
 
 (defun show-menu (a-menu-items a-parent-menu-id)
   "Show the menu, as given by the list a-menus.
@@ -99,10 +99,10 @@ Defaults to $XDG_CONF_DIR/speed-dial/speed-dial-menu-items.conf,
 if no location was given, based on the
 filename in the constants.rkt module."
   ;(current-basedir-program-name "speed-dial")
-  (concatenate (my-getenv "XDG_BASE_DIR") "/speed-dial")
+  (concatenate 'string (my-getenv "XDG_BASE_DIR") "/speed-dial")
   (cond
-    ((equal? (string-trim a-menu-items-conf) "") 
-      (load-menus-from-file (path->string (writable-config-file C-SPEED-DIAL-MENU-ITEMS))))
+    ((equal (string-trim '(#\Space #\e #\t #\m) a-menu-items-conf) "") 
+      (load-menus-from-file (path->string (writable-config-file *c-speed-dial-menu-items*))))
     (else (load-menus-from-file a-menu-items-conf))))
 
 (defun main ()
