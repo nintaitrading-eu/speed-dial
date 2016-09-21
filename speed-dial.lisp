@@ -102,7 +102,7 @@ filename in the constants.rkt module."
   (concatenate 'string (my-getenv "XDG_BASE_DIR") "/speed-dial")
   (cond
     ((equal (string-trim '(#\Space #\e #\t #\m) a-menu-items-conf) "") 
-      (load-menus-from-file (path->string (writable-config-file *c-speed-dial-menu-items*))))
+      (load-menus-from-file *c-speed-dial-menu-items*))
     (else (load-menus-from-file a-menu-items-conf))))
 
 (defun main ()

@@ -9,6 +9,7 @@
   :components ((:file "package")
                (:file "menu-functions")
                (:file "functions")
-               (:file "speed-dial" :depends-on ("package" "menu-functions" "functions"))
+               (:file "cl_generic/functions")
+               (:file "speed-dial" :depends-on ("package" "menu-functions" "functions" "cl_generic/functions"))
                ))
 
