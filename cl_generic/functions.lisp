@@ -10,8 +10,7 @@
 ; Example:
 ; ("test1a;test1b;test1c" "test2a;;test2c")
 ; -> (("test1a" "test1b" "test1c") ("test2a" "" "test2c"))
-  (map (lambda (a-string)
-    (string-split a-string a-delimiter)) a-list-of-strings))
+  (mapcar (lambda (x) (string-split x a-delimiter)) a-list-of-strings))
 
 (defun take-first-char (a-string)
   "Take first char of string, unless string is empty."
