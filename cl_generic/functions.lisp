@@ -30,9 +30,13 @@ Note: This function trims spaces on the left."
      (not (equal? (string-length (string-trim a-string)) 0)))
       a-stringlist))
 
+(defun my-read-lines (a-file)
+  "Read the lines of a file."
+  (with-output-to-string (z-out) (with-open-file (stream a-file)
+    (do ((char (read-char stream nil) (read-char stream nil))) ((null char)) (format z-out "~a" char)))))
+
 (defun load-lines-from-file (a-file a-comment-chars)
   "Loads all lines from a file, ignoring comments."
-  (car
-    (map (lambda (a-comment-char)
-      (filter-comment-lines
-        (read-lines a-file) a-comment-char)) a-comment-chars)))
+  (mapcar (lambda (a-comment-char)
+    (filter-comment-lines
+      (my-read-lines a-file) a-comment-char)) a-comment-chars))
