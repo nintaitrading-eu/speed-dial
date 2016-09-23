@@ -14,20 +14,20 @@
 
 (defun take-first-char (a-string)
   "Take first char of string, unless string is empty."
-  (if (eq? (string-length a-string) 0) "" (substring a-string 0 1)))
+  (if (equal (length a-string) 0) "" (substring a-string 0 1)))
 
 (defun filter-comment-lines (a-lines a-comment-char)
 "Filter out strings that start with a comment-character,
 so only the data lines are added.
 Note: This function trims spaces on the left."
   (remove-if-not #'(lambda (a-line)
-    (not (equal? (take-first-char (string-trim '(#\Space #\e #\t #\m) a-line)) a-comment-char)))
+    (not (equal (take-first-char (string-trim '(#\Space #\e #\t #\m) a-line)) a-comment-char)))
      a-lines))
 
 (defun filter-empty-strings (a-stringlist)
 "Removes empty strings from a list of strings."
   (remove-if-not #'(lambda (a-string)
-     (not (equal? (string-length (string-trim '(#\Space #\e #\t #\m) a-string)) 0)))
+     (not (equal (length (string-trim '(#\Space #\e #\t #\m) a-string)) 0)))
       a-stringlist))
 
 (defun my-read-lines (a-file)
