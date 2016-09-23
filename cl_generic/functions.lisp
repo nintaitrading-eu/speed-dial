@@ -20,14 +20,14 @@
 "Filter out strings that start with a comment-character,
 so only the data lines are added.
 Note: This function trims spaces on the left."
-  (filter (lambda (a-line)
-    (not (equal? (take-first-char (string-trim a-line)) a-comment-char)))
+  (remove-if-not #'(lambda (a-line)
+    (not (equal? (take-first-char (string-trim '(#\Space #\e #\t #\m) a-line)) a-comment-char)))
      a-lines))
 
 (defun filter-empty-strings (a-stringlist)
 "Removes empty strings from a list of strings."
-  (filter (lambda (a-string)
-     (not (equal? (string-length (string-trim a-string)) 0)))
+  (remove-if-not #'(lambda (a-string)
+     (not (equal? (string-length (string-trim '(#\Space #\e #\t #\m) a-string)) 0)))
       a-stringlist))
 
 (defun my-read-lines (a-file)
