@@ -4,7 +4,8 @@
   :description "Describe speed-dial here"
   :author "Your Name <your.name@example.com>"
   :license "Specify license here"
-  :depends-on (#:quicklisp)
+  :depends-on (#:quicklisp
+               #:split-sequence)
   :serial t
   :components ((:file "package")
                (:file "menu-functions")

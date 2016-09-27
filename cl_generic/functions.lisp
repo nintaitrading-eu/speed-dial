@@ -10,11 +10,11 @@
 ; Example:
 ; ("test1a;test1b;test1c" "test2a;;test2c")
 ; -> (("test1a" "test1b" "test1c") ("test2a" "" "test2c"))
-  (mapcar (lambda (x) (string-split x a-delimiter)) a-list-of-strings))
+  (mapcar (lambda (x) (split-sequence:split-sequence a-delimiter x)) a-list-of-strings))
 
 (defun take-first-char (a-string)
   "Take first char of string, unless string is empty."
-  (if (equal (length a-string) 0) "" (substring a-string 0 1)))
+  (if (equal (length a-string) 0) "" (subseq a-string 0 1)))
 
 (defun filter-comment-lines (a-lines a-comment-char)
 "Filter out strings that start with a comment-character,
