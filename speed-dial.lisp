@@ -62,8 +62,8 @@ of options. The retrieved categories are normally used for this."
 (defun print-menu-ending (a-parent-menu-id)
   "Add extra options to the menu, for quitting
 the program and/or going back one level."
-  (if (> a-parent-menu-id 0) (printf "[b] back~%") (printf ""))
-  (if (equal a-parent-menu-id 0) (printf "[q] quit~%") (printf "")))
+  (if (> a-parent-menu-id 0) (format t "[b] back~%") (format t ""))
+  (if (equal a-parent-menu-id 0) (format t "[q] quit~%") (format t "")))
 
 (defun show-menu (a-menu-items a-parent-menu-id)
   "Show the menu, as given by the list a-menus.
@@ -73,7 +73,7 @@ This also starts the option parsing loop."
   (print-header "Menu")
   ;(print-menu (retrieve-menu-items a-menu-items a-parent-menu-id))
   (print-menu-ending a-parent-menu-id)
-  (newline))
+  (terpri))
 
 ; TODO: make the choice condition dependend on a-choice-list.
 (defun loop-choice (a-menu-items a-parent-menu-id a-choice-list)

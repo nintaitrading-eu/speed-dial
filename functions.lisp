@@ -7,24 +7,24 @@
 
 (defun print-header (a-title)
   "Prints a formatted header, with the given title."
-  (fprintf (current-output-port) "~a~%" a-title)
-  (fprintf (current-output-port) "-----------------------------~%"))
+  (format t "~a~%" a-title)
+  (format t "-----------------------------~%"))
 
 (defun print-menu-error ()
   "Prints an error message when a given option is unknown."
-  (lambda ()
-    (printf "Unknown option. Choose wisely.~%")
+  (progn
+    (format t "Unknown option. Choose wisely.~%")
     (sleep 1)))
 
 ; TODO: Open in default browser.
 (defun open-url ()
   "Opens a given url in firefox."
   (lambda (a-url)
-    (printf "firefox ~a~%" a-url)))
+    (format t "firefox ~a~%" a-url)))
 
 (defun display-prompt ()
   "Displays a prompt."
-    (printf *c-prompt*))
+    (format t "~a " *c-prompt*))
 
 (defun sh (cmd)
   "A multi-implementation function equivalent for the C function system."
@@ -52,5 +52,5 @@
   "Quits, with a fancy message."
   (progn
     (sh "clear")
-    (printf "Bye.")
+    (format t "Bye.~%")
     (exit)))
