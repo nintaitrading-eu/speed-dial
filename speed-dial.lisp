@@ -3,23 +3,21 @@
 ;;;; Command line menu for easy access to applications and urls.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package #:speed-dial)
-
 ;;; Global variables
-(defvar *c-speed-dial-menu-items* "speed-dial-menu-items.conf")
-(defvar *c-comment-chars* '("#"))
-(defvar *c-delimiter* ";")
-(defvar *c-prompt* "> ")
-;(defvar *c-sh-cmd* "/bin/sh") ; FreeBSD
-(defvar *c-sh-cmd* "C:\\Program Files (x86)\\Gow\\bin\\bash.exe") ; Windows
+(defvar *g-speed-dial-menu-items* "speed-dial-menu-items.conf")
+(defvar *g-comment-chars* '("#"))
+(defvar *g-delimiter* ";")
+(defvar *g-prompt* "> ")
+;(defvar *g-sh-cmd* "/bin/sh") ; FreeBSD
+(defvar *g-sh-cmd* "C:\\Program Files (x86)\\Gow\\bin\\bash.exe") ; Windows
 
 ;;; Functions
 
 (defun load-menus-from-file (a-file)
   "Main logic that loads all the menu info from the configuration file."
   (split-list-of-strings
-    (filter-empty-strings (load-lines-from-file a-file *c-comment-chars*))
-    *c-delimiter*))
+    (filter-empty-strings (load-lines-from-file a-file *g-comment-chars*))
+    *g-delimiter*))
 
 (defun filter-menu-items (a-menu-items a-parent-menu-id)
   "Filter the list-of-menus, to show only a certain type of menus."
@@ -102,7 +100,7 @@ filename in the constants.rkt module."
   (concatenate 'string (my-getenv "XDG_BASE_DIR") "/speed-dial")
   (cond
     ((equal (string-trim '(#\Space #\e #\t #\m) a-menu-items-conf) "") 
-      (load-menus-from-file *c-speed-dial-menu-items*))
+      (load-menus-from-file *g-speed-dial-menu-items*))
     (else (load-menus-from-file a-menu-items-conf))))
 
 (defun main ()
