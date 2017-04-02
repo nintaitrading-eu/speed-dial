@@ -10,8 +10,8 @@
 (defvar *c-comment-chars* '("#"))
 (defvar *c-delimiter* ";")
 (defvar *c-prompt* "> ")
-;(defvar *c-sh-cmd* "/bin/sh") ; FreeBSD
-(defvar *c-sh-cmd* "C:\\Program Files (x86)\\Gow\\bin\\bash.exe") ; Windows
+(defvar *c-sh-cmd* "/bin/sh") ; FreeBSD
+;(defvar *c-sh-cmd* "C:\\Program Files (x86)\\Gow\\bin\\bash.exe") ; Windows
 
 ;;; Functions
 
