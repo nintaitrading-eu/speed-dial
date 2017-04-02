@@ -1,0 +1,31 @@
+= SPEED-DIAL (1)
+:doctype: manpage
+
+== NAME
+speed-dial - an application, written in Common Lisp for showing an extendable command line speed-dial menu.
+
+== SYNOPSIS
+Installed version: speed-dial-VERSION +
+
+Installed as: *speed-dial*
+
+== DEPENDS ON
+Needs Common Lisp to build. SBCL is preferred.
+
+== DESCRIPTION
+speed-dial is an application, that can display a command line menu, that is extendable via a config file. It can display grouped (categorized) programs and commands, in an easy to use menu.
+
+*speed-dial.rc* +
+The configuration file for the speed-dial application. Here, you can add menu items and categories, which will then be shown as menu-items and menus.
+
+== USAGE
+speed-dial
+
+== SEE ALSO
+N/A
+
+== BUGS
+N/A
+
+== EXAMPLES
+N/A
