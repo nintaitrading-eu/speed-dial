@@ -25,7 +25,7 @@
 ; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...) ("0" "2" "Menu blabla" "option A" ...))
 ; gives, for filter on "1":
 ; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...))
-  (filter (lambda (x) (equal (string->number (list-ref x 0)) a-parent-menu-id)) a-menu-items))
+  (remove-if-not (lambda (x) (equal (parse-integer (nth 0 x)) a-parent-menu-id)) a-menu-items))
 
 ; TODO: lots of fixes needed here.
 (defun retrieve-menu-items (a-menu-items a-parent-menu-id)
@@ -69,7 +69,7 @@ Note: Used for displaying the main menu.
 This also starts the option parsing loop."
   (speed-dial::sh  *c-sh-cmd* "clear")
   (speed-dial::print-header "Menu")
-  ;(print-menu (retrieve-menu-items a-menu-items a-parent-menu-id))
+  (print-menu (retrieve-menu-items a-menu-items a-parent-menu-id))
   (print-menu-ending a-parent-menu-id)
   (terpri))
 
