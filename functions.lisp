@@ -26,12 +26,12 @@
   "Displays a prompt."
     (format t "~a " *c-prompt*))
 
-(defun sh (cmd)
+(defun sh (a-shell a-cmd)
   "A multi-implementation function equivalent for the C function system."
-  #+clisp (shell cmd)
-  #+ecl (si:system cmd)
-  #+sbcl (sb-ext:run-program *c-sh-cmd* (list "-c" cmd) :input nil :output *standard-output*)
-  #+clozure (ccl:run-program *c-sh-cmd* (list "-c" cmd) :input nil :output *standard-output*))
+  #+clisp (shell a-cmd)
+  #+ecl (si:system a-cmd)
+  #+sbcl (sb-ext:run-program a-shell (list "-c" a-cmd) :input nil :output *standard-output*)
+  #+clozure (ccl:run-program a-shell (list "-c" a-cmd) :input nil :output *standard-output*))
 
 (defun my-getenv (name &optional default)
   "A multi-implementation function, for retrieving environment variables."

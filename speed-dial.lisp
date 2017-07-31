@@ -15,9 +15,9 @@
 
 (defun load-menus-from-file (a-file)
   "Main logic that loads all the menu info from the configuration file."
-  (split-list-of-strings
-    (filter-empty-strings (load-lines-from-file a-file *g-comment-chars*))
-    *g-delimiter*))
+  (speed-dial::split-list-of-strings
+    (speed-dial::filter-empty-strings (speed-dial::load-lines-from-file a-file *c-comment-chars*))
+    *c-delimiter*))
 
 (defun filter-menu-items (a-menu-items a-parent-menu-id)
   "Filter the list-of-menus, to show only a certain type of menus."
@@ -67,8 +67,8 @@ the program and/or going back one level."
   "Show the menu, as given by the list a-menus.
 Note: Used for displaying the main menu.
 This also starts the option parsing loop."
-  (sh "clear")
-  (print-header "Menu")
+  (speed-dial::sh  *c-sh-cmd* "clear")
+  (speed-dial::print-header "Menu")
   ;(print-menu (retrieve-menu-items a-menu-items a-parent-menu-id))
   (print-menu-ending a-parent-menu-id)
   (terpri))
@@ -97,10 +97,10 @@ Defaults to $XDG_CONF_DIR/speed-dial/speed-dial-menu-items.conf,
 if no location was given, based on the
 filename in the constants.rkt module."
   ;(current-basedir-program-name "speed-dial")
-  (concatenate 'string (my-getenv "XDG_BASE_DIR") "/speed-dial")
+  (concatenate 'string (speed-dial::my-getenv "XDG_BASE_DIR") "/speed-dial")
   (cond
     ((equal (string-trim '(#\Space #\e #\t #\m) a-menu-items-conf) "") 
-      (load-menus-from-file *g-speed-dial-menu-items*))
+      (load-menus-from-file *c-speed-dial-menu-items*))
     (else (load-menus-from-file a-menu-items-conf))))
 
 (defun main ()
