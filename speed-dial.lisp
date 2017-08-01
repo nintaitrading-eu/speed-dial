@@ -25,7 +25,7 @@
 ; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...) ("0" "2" "Menu blabla" "option A" ...))
 ; gives, for filter on "1":
 ; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...))
-  (remove-if-not (lambda (x) (equal (parse-integer (nth 0 x)) a-parent-menu-id)) a-menu-items))
+  (remove-if-not (lambda (x) (equal (parse-integer (nth 0 x) :junk-allowed t) a-parent-menu-id)) a-menu-items))
 
 ; TODO: lots of fixes needed here.
 (defun retrieve-menu-items (a-menu-items a-parent-menu-id)
