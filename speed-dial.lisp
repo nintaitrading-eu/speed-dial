@@ -31,9 +31,12 @@
 (defun retrieve-menu-items (a-menu-items a-parent-menu-id)
   "Retrieves the menu-items with a given a-parent-menu-id, so we know what items we have.
 Only the unique values are returned, sorted by menu-id."
-  (sort
-    (remove-duplicates (filter-menu-items a-menu-items a-parent-menu-id))
-    #:key (lambda (x) (car (cdr x))) string<?))
+; Example:
+; (("0" "1" "Menu issues" "option 1" ...) ("1" "2" "Menu blabla" "option A" ...))
+; gives, for parent-id 1:
+; (("1" "2" "Menu blabla" "option A" ...))
+  (mapcar #' (lambda (x) (sort x #'>))
+    (remove-duplicates (filter-menu-items a-menu-items a-parent-menu-id))))
 
 (defun retrieve-menu-options (a-menu-items a-parent-menu-id)
   "Retrieves the menu-options for a given parent-menu-id."
@@ -99,7 +102,7 @@ filename in the constants.rkt module."
   ;(current-basedir-program-name "speed-dial")
   (concatenate 'string (speed-dial::my-getenv "XDG_BASE_DIR") "/speed-dial")
   (cond
-    ((equal (string-trim '(#\Space #\e #\t #\m) a-menu-items-conf) "") 
+    ((equal (string-trim '(#\Space #\e #\t #\m) a-menu-items-conf) "")
       (load-menus-from-file *c-speed-dial-menu-items*))
     (else (load-menus-from-file a-menu-items-conf))))
 
