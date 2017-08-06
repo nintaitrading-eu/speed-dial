@@ -35,8 +35,8 @@ Only the unique values are returned, sorted by menu-id."
 ; (("0" "1" "Menu issues" "option 1" ...) ("1" "2" "Menu blabla" "option A" ...))
 ; gives, for parent-id 1:
 ; (("1" "2" "Menu blabla" "option A" ...))
-  (mapcar #' (lambda (x) (sort x #'>))
-    (remove-duplicates (filter-menu-items a-menu-items a-parent-menu-id))))
+  (print (filter-menu-items a-menu-items a-parent-menu-id))
+  (sort (remove-duplicates (filter-menu-items a-menu-items a-parent-menu-id)) #'string<= :key #'second))
 
 (defun retrieve-menu-options (a-menu-items a-parent-menu-id)
   "Retrieves the menu-options for a given parent-menu-id."
@@ -46,19 +46,13 @@ Only the unique values are returned, sorted by menu-id."
   (map (lambda (x) (intern x))
     (map (lambda (x) (nth 3 x)) (retrieve-menu-items a-menu-items a-parent-menu-id))))
 
+; TODO: this function gives invalid number of arguments: 2
 (defun print-menu (a-menu-items)
   "Write the main menu items, based on a given list of options.
-The retrieved categories are normally used for this."
+  The retrieved categories are normally used for this."
   (map (lambda (x)
-    (format t "[~a] ~a\n" (nth 3 x) (nth 2 x)))
-    a-menu-items))
-
-(defun print-menu (a-menu-items)
-  "Write the main menu items, based on a given list
-of options. The retrieved categories are normally used for this."
-  (map (lambda (x)
-    (format t "[~a] ~a~%" (nth 3 x) (nth 2 x)))
-    a-menu-items))
+         (format t "[~a] ~a\n" (nth 3 x) (nth 2 x)))
+       a-menu-items))
 
 (defun print-menu-ending (a-parent-menu-id)
   "Add extra options to the menu, for quitting
@@ -108,6 +102,7 @@ filename in the constants.rkt module."
 
 (defun main ()
   " Main entry point to the application."
-  (show-menu (list-of-menus "") 0))
+  ;(print (speed-dial::load-lines-from-file *c-speed-dial-menu-items* *c-comment-chars*)))
+  (show-menu (list-of-menus "") 1))
 
 (main)
