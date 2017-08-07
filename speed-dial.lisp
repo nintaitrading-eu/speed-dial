@@ -51,8 +51,7 @@ Only the unique values are returned, sorted by menu-id."
   "Write the main menu items, based on a given list of options.
   The retrieved categories are normally used for this."
   (map (lambda (x)
-         (format t "[~a] ~a\n" (nth 3 x) (nth 2 x)))
-       a-menu-items))
+         (format t "[~a] ~a~%" (nth 2 x) (nth 1 x))) a-menu-items))
 
 (defun print-menu-ending (a-parent-menu-id)
   "Add extra options to the menu, for quitting
