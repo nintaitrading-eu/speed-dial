@@ -46,12 +46,13 @@ Only the unique values are returned, sorted by menu-id."
   (map (lambda (x) (intern x))
     (map (lambda (x) (nth 3 x)) (retrieve-menu-items a-menu-items a-parent-menu-id))))
 
-; TODO: this function gives invalid number of arguments: 2
+; TODO: This prints the entire list as a list, I need to map the nth function on this
+; and somehow print 2 arguments?
 (defun print-menu (a-menu-items)
   "Write the main menu items, based on a given list of options.
   The retrieved categories are normally used for this."
-  (map (lambda (x)
-         (format t "[~a] ~a~%" (nth 2 x) (nth 1 x))) a-menu-items))
+  ;(format t "~{[~a] ~a~%~}" a-menu-items a-menu-items))
+  (format t "~{~a~%~}" a-menu-items)) 
 
 (defun print-menu-ending (a-parent-menu-id)
   "Add extra options to the menu, for quitting
