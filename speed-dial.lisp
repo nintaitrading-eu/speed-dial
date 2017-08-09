@@ -10,6 +10,7 @@
 (defvar *c-prompt* "> ")
 (defvar *c-sh-cmd* "/bin/sh") ; FreeBSD
 ;(defvar *c-sh-cmd* "C:\\Program Files (x86)\\Gow\\bin\\bash.exe") ; Windows
+(defvar *configuration* nil)
 
 ;;; Functions
 
@@ -100,9 +101,17 @@ filename in the constants.rkt module."
       (load-menus-from-file *c-speed-dial-menu-items*))
     (else (load-menus-from-file a-menu-items-conf))))
 
+(defun load-configuration (a-filename)
+  (with-open-file (in a-filename)
+    (with-standard-io-syntax
+      ;(setf *configuration* (speed-dial::filter-comment-lines (read in))))))
+      (setf *configuration* (read in)))))   
+
 (defun main ()
   " Main entry point to the application."
   ;(print (speed-dial::load-lines-from-file *c-speed-dial-menu-items* *c-comment-chars*)))
-  (show-menu (list-of-menus "") 1))
+  ;(progn
+    (load-configuration *c-speed-dial-menu-items*))
+    ;(show-menu (list-of-menus "") 1)))
 
 (main)
