@@ -14,11 +14,12 @@
 
 ;;; Functions
 
-(defun load-menus-from-file (a-file)
-  "Main logic that loads all the menu info from the configuration file."
-  (speed-dial::split-list-of-strings
-    (speed-dial::filter-empty-strings (speed-dial::load-lines-from-file a-file *c-comment-chars*))
-    *c-delimiter*))
+;(defun load-menus-from-file (a-file)
+;  "Main logic that loads all the menu info from the configuration file."
+;    (load-configuration *c-speed-dial-menu-items*))
+  ;(speed-dial::split-list-of-strings
+  ;  (speed-dial::filter-empty-strings (speed-dial::load-lines-from-file a-file *c-comment-chars*))
+  ;  *c-delimiter*))
 
 (defun filter-menu-items (a-menu-items a-parent-menu-id)
   "Filter the list-of-menus, to show only a certain type of menus."
@@ -49,11 +50,11 @@ Only the unique values are returned, sorted by menu-id."
 
 ; TODO: This prints the entire list as a list, I need to map the nth function on this
 ; and somehow print 2 arguments?
-(defun print-menu (a-menu-items)
+(defun print-menu ()
   "Write the main menu items, based on a given list of options.
   The retrieved categories are normally used for this."
   ;(format t "~{[~a] ~a~%~}" a-menu-items a-menu-items))
-  (format t "~{~a~%~}" a-menu-items)) 
+  (map (lambda (x) (format t "~{~a~%~}" (getf x :TITLE)) *configuration*)))
 
 (defun print-menu-ending (a-parent-menu-id)
   "Add extra options to the menu, for quitting
@@ -61,13 +62,13 @@ the program and/or going back one level."
   (if (> a-parent-menu-id 0) (format t "[b] back~%") (format t ""))
   (if (equal a-parent-menu-id 0) (format t "[q] quit~%") (format t "")))
 
-(defun show-menu (a-menu-items a-parent-menu-id)
+(defun show-menu (a-parent-menu-id)
   "Show the menu, as given by the list a-menus.
 Note: Used for displaying the main menu.
 This also starts the option parsing loop."
   (speed-dial::sh  *c-sh-cmd* "clear")
   (speed-dial::print-header "Menu")
-  (print-menu (retrieve-menu-items a-menu-items a-parent-menu-id))
+  (print-menu (a-parent-menu-id))
   (print-menu-ending a-parent-menu-id)
   (terpri))
 
@@ -89,29 +90,30 @@ This also starts the option parsing loop."
     (sleep 1)))
 
 ; TODO: how to implement current-basedir-program-name
-(defun list-of-menus (a-menu-items-conf)
-  "Get list-of-menus from the given file location.
-Defaults to $XDG_CONF_DIR/speed-dial/speed-dial-menu-items.conf,
-if no location was given, based on the
-filename in the constants.rkt module."
+;(defun list-of-menus (a-menu-items-conf)
+;  "Get list-of-menus from the given file location.
+;Defaults to $XDG_CONF_DIR/speed-dial/speed-dial-menu-items.conf,
+;if no location was given, based on the
+;filename in the constants.rkt module."
   ;(current-basedir-program-name "speed-dial")
-  (concatenate 'string (speed-dial::my-getenv "XDG_BASE_DIR") "/speed-dial")
-  (cond
-    ((equal (string-trim '(#\Space #\e #\t #\m) a-menu-items-conf) "")
-      (load-menus-from-file *c-speed-dial-menu-items*))
-    (else (load-menus-from-file a-menu-items-conf))))
+;  (concatenate 'string (speed-dial::my-getenv "XDG_BASE_DIR") "/speed-dial")
+;  (cond
+;    ((equal (string-trim '(#\Space #\e #\t #\m) a-menu-items-conf) "")
+;      (load-menus-from-file *c-speed-dial-menu-items*))
+;    (else (load-menus-from-file a-menu-items-conf))))
 
 (defun load-configuration (a-filename)
+  "Load the menu structure from the given configuration file."
   (with-open-file (in a-filename)
     (with-standard-io-syntax
       ;(setf *configuration* (speed-dial::filter-comment-lines (read in))))))
       (setf *configuration* (read in)))))   
 
 (defun main ()
-  " Main entry point to the application."
+  "Main entry point to the application."
   ;(print (speed-dial::load-lines-from-file *c-speed-dial-menu-items* *c-comment-chars*)))
-  ;(progn
-    (load-configuration *c-speed-dial-menu-items*))
-    ;(show-menu (list-of-menus "") 1)))
+  (progn
+    (load-configuration *c-speed-dial-menu-items*) ; TODO: implement the xdg_basedir logic
+    (show-menu 0)))
 
 (main)
