@@ -48,13 +48,10 @@ Only the unique values are returned, sorted by menu-id."
   (map (lambda (x) (intern x))
     (map (lambda (x) (nth 3 x)) (retrieve-menu-items a-menu-items a-parent-menu-id))))
 
-; TODO: This prints the entire list as a list, I need to map the nth function on this
-; and somehow print 2 arguments?
 (defun print-menu ()
   "Write the main menu items, based on a given list of options.
   The retrieved categories are normally used for this."
-  ;(format t "~{[~a] ~a~%~}" a-menu-items a-menu-items))
-  (map (lambda (x) (format t "~{~a~%~}" (getf x :TITLE)) *configuration*)))
+  (map 'list (lambda (x) (format t "[~a] ~a~%" (getf x :KEYCHAR) (getf x :TITLE))) *configuration*))
 
 (defun print-menu-ending (a-parent-menu-id)
   "Add extra options to the menu, for quitting
@@ -68,7 +65,7 @@ Note: Used for displaying the main menu.
 This also starts the option parsing loop."
   (speed-dial::sh  *c-sh-cmd* "clear")
   (speed-dial::print-header "Menu")
-  (print-menu (a-parent-menu-id))
+  (print-menu) ; TODO: implement filtering on a-parent-menu-id
   (print-menu-ending a-parent-menu-id)
   (terpri))
 
