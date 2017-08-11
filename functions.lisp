@@ -22,10 +22,6 @@
   (lambda (a-url)
     (format t "firefox ~a~%" a-url)))
 
-(defun display-prompt ()
-  "Displays a prompt."
-    (format t "~a " *c-prompt*))
-
 (defun sh (a-shell a-cmd)
   "A multi-implementation function equivalent for the C function system."
   #+clisp (shell a-cmd)
@@ -48,9 +44,9 @@
      #+LISPWORKS (lispworks:environment-variable name)
      default))
 
-(defun run-quit ()
+(defun run-quit (a-shell)
   "Quits, with a fancy message."
   (progn
-    (sh "clear")
+    (sh a-shell "clear")
     (format t "Bye.~%")
-    (exit)))
+    (common-lisp-user::quit)))

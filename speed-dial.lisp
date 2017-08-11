@@ -21,32 +21,34 @@
   ;  (speed-dial::filter-empty-strings (speed-dial::load-lines-from-file a-file *c-comment-chars*))
   ;  *c-delimiter*))
 
-(defun filter-menu-items (a-menu-items a-parent-menu-id)
-  "Filter the list-of-menus, to show only a certain type of menus."
-; Example:
-; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...) ("0" "2" "Menu blabla" "option A" ...))
-; gives, for filter on "1":
-; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...))
-  (remove-if-not (lambda (x) (equal (parse-integer (nth 0 x) :junk-allowed t) a-parent-menu-id)) a-menu-items))
+;(defun filter-menu-items (a-menu-items a-parent-menu-id)
+;  "Filter the list-of-menus, to show only a certain type of menus."
+;; Example:
+;; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...) ("0" "2" "Menu blabla" "option A" ...))
+;; gives, for filter on "1":
+;; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...))
+;  (remove-if-not (lambda (x) (equal (parse-integer (nth 0 x) :junk-allowed t) a-parent-menu-id)) a-menu-items))
 
 ; TODO: lots of fixes needed here.
-(defun retrieve-menu-items (a-menu-items a-parent-menu-id)
-  "Retrieves the menu-items with a given a-parent-menu-id, so we know what items we have.
-Only the unique values are returned, sorted by menu-id."
-; Example:
-; (("0" "1" "Menu issues" "option 1" ...) ("1" "2" "Menu blabla" "option A" ...))
-; gives, for parent-id 1:
-; (("1" "2" "Menu blabla" "option A" ...))
-  (print (filter-menu-items a-menu-items a-parent-menu-id))
-  (sort (remove-duplicates (filter-menu-items a-menu-items a-parent-menu-id)) #'string<= :key #'second))
+;(defun retrieve-menu-items (a-parent-menu-id)
+;  "Retrieves the menu-items with a given a-parent-menu-id, so we know what items we have.
+;Only the unique values are returned, sorted by menu-id."
+;; Example:
+;; (("0" "1" "Menu issues" "option 1" ...) ("1" "2" "Menu blabla" "option A" ...))
+;; gives, for parent-id 1:
+;; (("1" "2" "Menu blabla" "option A" ...))
+;  (print (filter-menu-items a-parent-menu-id))
+;  (sort (remove-duplicates (filter-menu-items a-parent-menu-id)) #'string<= :key #'second))
 
-(defun retrieve-menu-options (a-menu-items a-parent-menu-id)
+; TODO: Idea: loop over lists and cons the getf KEYCHAR into a new list.
+(defun retrieve-menu-options (a-parent-menu-id)
   "Retrieves the menu-options for a given parent-menu-id."
 ; Example:
 ; '(("1" "1" "a"...) ("1" "2" "b"...))
 ; will give '("a" "b") as a result.
-  (map (lambda (x) (intern x))
-    (map (lambda (x) (nth 3 x)) (retrieve-menu-items a-menu-items a-parent-menu-id))))
+ (list "a" "b" "c"))
+;  (map (lambda (x) (intern x))
+;    (map (lambda (x) (nth 3 x)) (retrieve-menu-items a-parent-menu-id))))
 
 (defun print-menu ()
   "Write the main menu items, based on a given list of options.
@@ -63,23 +65,26 @@ the program and/or going back one level."
   "Show the menu, as given by the list a-menus.
 Note: Used for displaying the main menu.
 This also starts the option parsing loop."
-  (speed-dial::sh  *c-sh-cmd* "clear")
-  (speed-dial::print-header "Menu")
-  (print-menu) ; TODO: implement filtering on a-parent-menu-id
-  (print-menu-ending a-parent-menu-id)
-  (terpri))
+  (progn
+    (speed-dial::sh *c-sh-cmd* "clear")
+    (speed-dial::print-header "Menu")
+    (print-menu) ; TODO: implement filtering on a-parent-menu-id
+    (print-menu-ending a-parent-menu-id)
+    (terpri)
+    (format t "~a " *c-prompt*)
+    (loop-choice a-parent-menu-id (retrieve-menu-options a-parent-menu-id))))
 
 ; TODO: make the choice condition dependend on a-choice-list.
-(defun loop-choice (a-menu-items a-parent-menu-id a-choice-list)
+(defun loop-choice (a-parent-menu-id a-choice-list)
   "Loop that displays the menu, until an option is chosen."
     (let ((l-choice (read)))
-    (cond ((member l-choice a-choice-list) (run-choice l-choice a-menu-items))
-          ((eq? l-choice 'q) (run-quit))
-          (else (print-menu-error)))
-    (show-menu a-menu-items a-parent-menu-id)))
+    (cond ((member l-choice a-choice-list) (run-choice l-choice))
+          ((equalp l-choice 'q) (speed-dial::run-quit *c-sh-cmd*))
+          (else (speed-dial::print-menu-error)))
+    (show-menu a-parent-menu-id)))
 
 ; run-choice:
-(defun run-choice (a-choice a-list-of-menus)
+(defun run-choice (a-choice)
   "Execute the correct action, belonging to the chosen option for that menu-item."
   (progn
     ; TODO: do something else than printing
