@@ -64,6 +64,17 @@ the program and/or going back one level."
   (if (equal a-parent-menu-id 0)
     (print-menu-items '((:MENU-ID a-parent-menu-id :MENU-ITEM-ID 99 :TITLE "quit" :KEYCHAR "q" :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))) (format t ""))) 
 
+(defun select (selector-fn a-menu-items)
+  "Select only menu-items with the given selector."
+  (remove-if-not selector-fn a-menu-items))
+
+(defun parent-selector (a-parent-menu-id)
+  "Select only menu-items with the given parent-menu-id.
+This depends on the select function."
+; Example:
+; (select (parent-selector 0) *menu-items*) gives the main menu.
+  #'(lambda (id) (equal (getf id :MENU-ID) a-parent-menu-id)))
+
 (defun show-menu (a-parent-menu-id)
   "Show the menu, as given by the list a-menus.
 Note: Used for displaying the main menu.
@@ -71,7 +82,7 @@ This also starts the option parsing loop."
   (progn
     (speed-dial::sh *c-sh-cmd* "clear")
     (apply #' append (speed-dial::print-header "Menu")
-      (print-menu-items *menu-items*)
+           (print-menu-items (select (parent-selector a-parent-menu-id) *menu-items*))
       (print-menu-ending a-parent-menu-id)
       (format t "~%~a " *c-prompt*))
     (loop-choice a-parent-menu-id (retrieve-menu-options a-parent-menu-id))))
