@@ -24,9 +24,9 @@
 ;(defun filter-menu-items (a-menu-items a-menu-id)
 ;  "Filter the list-of-menus, to show only a certain type of menus."
 ;; Example:
-;; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...) ("0" "2" "Menu blabla" "option A" ...))
+;; ((-1 0 1 "Menu issues" "option 1" ...) (-1 0 1 "Menu issues" "option 2" ...) ("0" "2" "Menu blabla" "option A" ...))
 ;; gives, for filter on "1":
-;; (("0" "1" "Menu issues" "option 1" ...) ("0" "1" "Menu issues" "option 2" ...))
+;; ((-1 0 1 "Menu issues" "option 1" ...) (-1 0 1 "Menu issues" "option 2" ...))
 ;  (remove-if-not (lambda (x) (equal (parse-integer (nth 0 x) :junk-allowed t) a-menu-id)) a-menu-items))
 
 ; TODO: lots of fixes needed here.
@@ -44,15 +44,23 @@
 (defun retrieve-menu-options (a-menu-id)
   "Retrieves the menu-options for a given parent-menu-id."
 ; Example:
-; '(("1" "1" "a"...) ("1" "2" "b"...))
+; '((-1 0 1 "a"...) (-1 0 2 "b"...))
 ; will give '("a" "b") as a result.
- (mapcar #' caddr *menu-items*))
+  (mapcar #' get-keychar *menu-items*))
+  ;(mapcar #' intern (mapcar #' get-keychar *menu-items*)))
+
+(defun get-keychar (a-menu-item)
+  "Get the KEYCHAR from a menu-item list."
+  ; Example:
+  ; '(-1 0 1 "a"...)
+  ; gives ("a")
+  (getf a-menu-item :KEYCHAR))
 
 (defun print-menu-items (a-menu-items)
   "Write the main menu items, based on a given list of options.
   The retrieved categories are normally used for this."
   ; TODO: implement filtering on a-menu-id 
-  (map 'list (lambda (x) (format t "[~a] ~a~%" (getf x :KEYCHAR) (getf x :TITLE))) a-menu-items))
+  (map 'list (lambda (x) (format t "[~a] ~a~%" (string-downcase (symbol-name (getf x :KEYCHAR))) (getf x :TITLE))) a-menu-items))
 
 (defun print-menu-ending (a-menu-id)
   "Add extra options to the menu, for quitting
@@ -60,9 +68,9 @@ the program and/or going back one level."
 ; TODO: use a macro for generating a menu item?
 ; See the make-cd function?
   (if (> a-menu-id 0) 
-    (print-menu-items '((:PARENT-MENU-ID (-1 a-menu-id) :MENU-ID a-menu-id :TITLE "back" :KEYCHAR "b" :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))) (format t ""))
+    (print-menu-items '((:PARENT-MENU-ID (-1 a-menu-id) :MENU-ID a-menu-id :TITLE "back" :KEYCHAR b :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))) (format t ""))
   (if (equal a-menu-id 0)
-    (print-menu-items '((:PARENT-MENU-ID (-1 a-menu-id) :MENU-ID a-menu-id :TITLE "quit" :KEYCHAR "q" :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))) (format t ""))) 
+    (print-menu-items '((:PARENT-MENU-ID (-1 a-menu-id) :MENU-ID a-menu-id :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))) (format t ""))) 
 
 (defun select (selector-fn a-menu-items)
   "Select only menu-items with the given selector."
@@ -91,7 +99,8 @@ This also starts the option parsing loop."
     (apply #' append (speed-dial::print-header "Menu")
       (print-menu-items (select (where :a-parent-menu-id a-parent-menu-id :a-menu-id a-menu-id) *menu-items*))
       (print-menu-ending a-menu-id)
-      (format t "~%~a " *c-prompt*))
+      (format t "~%~a " *c-prompt*)
+      (format t ""))
     (loop-choice a-menu-id (retrieve-menu-options a-menu-id))))
 
 (defun loop-choice (a-menu-id a-choice-list)
@@ -106,7 +115,7 @@ This also starts the option parsing loop."
   "Execute the correct action, belonging to the chosen option for that menu-item."
   (progn
     ; TODO: do something else than printing
-    (format t "~a chosen~%" a-choice)
+    (format t "~a chosen~%" (string-downcase (symbol-name a-choice)))
     (sleep 1)))
 
 ; TODO: how to implement current-basedir-program-name
