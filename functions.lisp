@@ -5,10 +5,9 @@
 
 (in-package :speed-dial)
 
-(defun print-header (a-title)
-  "Prints a formatted header, with the given title."
-  (format t "~a~%" a-title)
-  (format t "-----------------------------~%"))
+(defun get-header (a-title)
+  "Returns a formatted header, with the given title."
+  (format nil "~a~%-----------------------------~%" a-title))
 
 (defun print-menu-error ()
   "Prints an error message when a given option is unknown."

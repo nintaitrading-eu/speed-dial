@@ -8,8 +8,8 @@
 (defvar *c-comment-chars* '("#"))
 (defvar *c-delimiter* ";")
 (defvar *c-prompt* "> ")
-;(defvar *c-sh-cmd* "/bin/sh") ; FreeBSD
-(defvar *c-sh-cmd* "C:\\Program Files (x86)\\Gow\\bin\\bash.exe") ; Windows
+(defvar *c-sh-cmd* "/bin/sh") ; FreeBSD
+;(defvar *c-sh-cmd* "C:\\Program Files (x86)\\Gow\\bin\\bash.exe") ; Windows
 (defvar *menu-items* nil)
 
 ;;; Functions
@@ -56,21 +56,22 @@
   ; gives ("a")
   (getf a-menu-item :KEYCHAR))
 
-(defun print-menu-items (a-menu-items)
-  "Write the main menu items, based on a given list of options.
+(defun get-menu-items (a-menu-items)
+  "Return the main menu items, based on a given list of options.
   The retrieved categories are normally used for this."
-  ; TODO: implement filtering on a-menu-id 
-  (map 'list (lambda (x) (format t "[~a] ~a~%" (string-downcase (symbol-name (getf x :KEYCHAR))) (getf x :TITLE))) a-menu-items))
+  (map 'list (lambda (x) (format nil "[~a] ~a~%" (string-downcase (symbol-name (getf x :KEYCHAR))) (getf x :TITLE))) a-menu-items))
 
-(defun print-menu-ending (a-menu-id)
-  "Add extra options to the menu, for quitting
+(defun get-menu-ending (a-menu-id)
+  "Return extra options to the menu, for quitting
 the program and/or going back one level."
 ; TODO: use a macro for generating a menu item?
 ; See the make-cd function?
-  (if (> a-menu-id 0) 
-    (print-menu-items '((:PARENT-MENU-ID (-1 a-menu-id) :MENU-ID a-menu-id :TITLE "back" :KEYCHAR b :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))) (format t ""))
-  (if (equal a-menu-id 0)
-    (print-menu-items '((:PARENT-MENU-ID (-1 a-menu-id) :MENU-ID a-menu-id :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))) (format t ""))) 
+(cond
+  ((> a-menu-id 0)
+    (get-menu-items '((:PARENT-MENU-ID (-1 a-menu-id) :MENU-ID a-menu-id :TITLE "back" :KEYCHAR b :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))
+  ((equal a-menu-id 0)
+    (get-menu-items '((:PARENT-MENU-ID (-1 a-menu-id) :MENU-ID a-menu-id :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))
+  (t (format nil ""))))
 
 (defun select (selector-fn a-menu-items)
   "Select only menu-items with the given selector."
@@ -78,17 +79,10 @@ the program and/or going back one level."
 
 (defun where (&key a-parent-menu-id a-menu-id)
   "Where clause for filtering on a combination of parent-menu-id and menu-id."
-  #'(lambda (a-menu-item) 
+  #'(lambda (a-menu-item)
     (and
       (if a-parent-menu-id (equal (getf a-menu-item :PARENT-MENU-ID) a-parent-menu-id) t)
       (if a-menu-id (equal (getf a-menu-item :MENU-ID) a-menu-id) t))))
-
-(defun menu-selector (a-parent-menu-id a-menu-id)
-  "Select only menu-items with the given menu-id.
-This depends on the select function."
-; Example:
-; (select (menu-selector 0) *menu-items*) gives the main menu.
-#'(lambda (id) (and (equal (getf id :MENU-ID) a-menu-id))))
 
 (defun show-menu (a-parent-menu-id a-menu-id)
   "Show the menu, as given by the list a-menus.
@@ -96,11 +90,11 @@ Note: Used for displaying the main menu.
 This also starts the option parsing loop."
   (progn
     (speed-dial::sh *c-sh-cmd* "clear")
-    (apply #' append (speed-dial::print-header "Menu")
-      (print-menu-items (select (where :a-parent-menu-id a-parent-menu-id :a-menu-id a-menu-id) *menu-items*))
-      (print-menu-ending a-menu-id)
-      (format t "~%~a " *c-prompt*)
-      (format t ""))
+    (format t "~a~{~a~}~{~a~}~a "
+            (speed-dial::get-header "Menu")
+            (get-menu-items (select (where :a-parent-menu-id a-parent-menu-id :a-menu-id a-menu-id) *menu-items*))
+            (get-menu-ending a-menu-id)
+            *c-prompt*)
     (loop-choice a-menu-id (retrieve-menu-options a-menu-id))))
 
 (defun loop-choice (a-menu-id a-choice-list)
@@ -136,7 +130,7 @@ This also starts the option parsing loop."
   (with-open-file (in a-filename)
     (with-standard-io-syntax
       ;(setf *menu-items* (speed-dial::filter-comment-lines (read in))))))
-      (setf *menu-items* (read in)))))   
+      (setf *menu-items* (read in)))))
 
 (defun main ()
   "Main entry point to the application."
