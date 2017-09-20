@@ -1,0 +1,18 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp (ql:quickload 'speed-dial :silent t)
+  )
+
+(defpackage :ros.script.speed-dial.3714890195
+  (:use :cl))
+(in-package :ros.script.speed-dial.3714890195)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (speed-dial:main))
+;;; vim: set ft=lisp lisp:
