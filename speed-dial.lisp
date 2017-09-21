@@ -90,20 +90,26 @@ Note: Used for displaying the main menu.
 This also starts the option parsing loop."
   (progn
     (speed-dial::sh *c-sh-cmd* "clear")
+    ; TODO: The format below is not the problem!
     (format t "~a~{~a~}~{~a~}~a "
             (speed-dial::get-header "Menu")
             (get-menu-items (select (where :a-parent-menu-id a-parent-menu-id :a-menu-id a-menu-id) *menu-items*))
             (get-menu-ending a-menu-id)
             *c-prompt*)
-    (loop-choice a-menu-id (retrieve-menu-options a-menu-id))))
-
-(defun loop-choice (a-menu-id a-choice-list)
-  "Loop that displays the menu, until an option is chosen."
-    (let ((l-choice (read)))
-    (cond ((member l-choice a-choice-list) (run-choice l-choice))
-          ((equalp l-choice 'q) (speed-dial::run-quit *c-sh-cmd*))
-          (t (speed-dial::print-menu-error)))
+    ;(ask-for-option (retrieve-menu-options a-menu-id))
+    (ask-for-option)
+    ; TODO: Uncommenting the show-menu (no more recursion), is also not the solution.
     (show-menu (- a-menu-id 1) a-menu-id)))
+
+;(defun ask-for-option (a-choice-list)
+(defun ask-for-option ()
+  "Ask for an option and react to it in the appropriate way."
+  ; TODO: I uncommented everything, it's the read function that screws it up.
+    (let ((l-choice (read)))
+      ;(cond ((member l-choice a-choice-list) (run-choice l-choice))
+      ;      ((equalp l-choice 'q) (speed-dial::run-quit *c-sh-cmd*))
+      ;      (t (speed-dial::print-menu-error)) 
+      (if (equalp l-choice 'q) (SB-EXT:EXIT)))) 
 
 (defun run-choice (a-choice)
   "Execute the correct action, belonging to the chosen option for that menu-item."

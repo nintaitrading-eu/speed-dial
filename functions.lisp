@@ -48,4 +48,4 @@
   (progn
     (sh a-shell "clear")
     (format t "Bye.~%")
-    (common-lisp-user::quit)))
+    (SB-EXT:EXIT)))
