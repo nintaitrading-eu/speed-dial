@@ -89,7 +89,9 @@ This also starts the option parsing loop."
     (force-output) ; Note: The prompt came later. Bufferd output in combination with the read function perhaps?
     (let ((l-retval (ask-for-option (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*)))))
         (if l-retval
-            (cond ((equalp l-retval 'b) (show-menu (- a-parent-menu-id 1)))
+          (cond ((equalp l-retval 'b) (if (equalp a-parent-menu-id -1)
+                                        (show-menu a-parent-menu-id)
+                                        (show-menu (- a-parent-menu-id 1))))
                 ((equalp l-retval 'q) (speed-dial::run-quit *c-sh-cmd*))
                 (t (show-menu (+ 1 a-parent-menu-id))))
           (speed-dial::run-quit *c-sh-cmd*)))))
