@@ -40,15 +40,6 @@
 ;  (print (filter-menu-items a-menu-id))
 ;  (sort (remove-duplicates (filter-menu-items a-menu-id)) #'string<= :key #'second))
 
-; TODO: Filter, based on a-menu-id.
-(defun retrieve-menu-options (a-menu-id)
-  "Retrieves the menu-options for a given parent-menu-id."
-; Example:
-; '((-1 0 1 "a"...) (-1 0 2 "b"...))
-; will give '("a" "b") as a result.
-  (mapcar #' get-keychar *menu-items*))
-  ;(mapcar #' intern (mapcar #' get-keychar *menu-items*)))
-
 (defun get-keychar (a-menu-item)
   "Get the KEYCHAR from a menu-item list."
   ; Example:
@@ -57,9 +48,12 @@
   (getf a-menu-item :KEYCHAR))
 
 (defun get-menu-items (a-menu-items)
-  "Return the main menu items, based on a given list of options.
-  The retrieved categories are normally used for this."
+  "Return the given menu-items in a nicely formatted form."
   (map 'list (lambda (x) (format nil "[~a] ~a~%" (string-downcase (symbol-name (getf x :KEYCHAR))) (getf x :TITLE))) a-menu-items))
+
+(defun get-menu-options (a-menu-items)
+  "Return the menu options from the given menu-items."
+  (map 'list (lambda (x) (getf x :KEYCHAR)) a-menu-items))
 
 (defun get-menu-ending (a-menu-id)
   "Return extra options to the menu, for quitting
@@ -96,7 +90,7 @@ This also starts the option parsing loop."
       (get-menu-ending a-menu-id)
       *c-prompt*)
     (force-output) ; Note: The prompt came later. Bufferd output in combination with the read function perhaps?
-    (let ((l-retval (ask-for-option (retrieve-menu-options a-menu-id))))
+    (let ((l-retval (ask-for-option (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id :a-menu-id a-menu-id) *menu-items*)))))
         (if l-retval
           (show-menu (- a-menu-id 1) a-menu-id)
           (speed-dial::run-quit *c-sh-cmd*)))))
