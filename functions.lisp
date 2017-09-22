@@ -45,7 +45,10 @@
 
 (defun run-quit (a-shell)
   "Quits, with a fancy message."
+  ; Note: Don't actuall use sb-ext:exit.
+  ; This cause fatal errors and unexpected behaviour.
+  ; Build your logic, so it exits a loop and shuts down
+  ; cleanly.
   (progn
     (sh a-shell "clear")
-    (format t "Bye.~%")
-    (SB-EXT:EXIT)))
+    (format t "Bye.~%")))

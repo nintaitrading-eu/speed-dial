@@ -90,26 +90,23 @@ Note: Used for displaying the main menu.
 This also starts the option parsing loop."
   (progn
     (speed-dial::sh *c-sh-cmd* "clear")
-    ; TODO: The format below is not the problem!
-    (format t "~a~{~a~}~{~a~}~a "
-            (speed-dial::get-header "Menu")
-            (get-menu-items (select (where :a-parent-menu-id a-parent-menu-id :a-menu-id a-menu-id) *menu-items*))
-            (get-menu-ending a-menu-id)
-            *c-prompt*)
-    ;(ask-for-option (retrieve-menu-options a-menu-id))
-    (ask-for-option)
-    ; TODO: Uncommenting the show-menu (no more recursion), is also not the solution.
-    (show-menu (- a-menu-id 1) a-menu-id)))
+    (format t "~a~{~a~}~{~a~}~a"
+      (speed-dial::get-header "Menu")
+      (get-menu-items (select (where :a-parent-menu-id a-parent-menu-id :a-menu-id a-menu-id) *menu-items*))
+      (get-menu-ending a-menu-id)
+      *c-prompt*)
+    (force-output) ; Note: The prompt came later. Bufferd output in combination with the read function perhaps?
+    (let ((l-retval (ask-for-option (retrieve-menu-options a-menu-id))))
+        (if l-retval
+          (show-menu (- a-menu-id 1) a-menu-id)
+          (speed-dial::run-quit *c-sh-cmd*)))))
 
-;(defun ask-for-option (a-choice-list)
-(defun ask-for-option ()
+(defun ask-for-option (a-choice-list)
   "Ask for an option and react to it in the appropriate way."
-  ; TODO: I uncommented everything, it's the read function that screws it up.
-    (let ((l-choice (read)))
-      ;(cond ((member l-choice a-choice-list) (run-choice l-choice))
-      ;      ((equalp l-choice 'q) (speed-dial::run-quit *c-sh-cmd*))
-      ;      (t (speed-dial::print-menu-error)) 
-      (if (equalp l-choice 'q) (SB-EXT:EXIT)))) 
+  (let ((l-choice (read)))
+    (cond ((member l-choice a-choice-list) (progn (run-choice l-choice) t))
+          ((equalp l-choice 'q) nil)
+          (t (progn (speed-dial::print-menu-error) t)))))
 
 (defun run-choice (a-choice)
   "Execute the correct action, belonging to the chosen option for that menu-item."
