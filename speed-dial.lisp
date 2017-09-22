@@ -91,6 +91,7 @@ This also starts the option parsing loop."
             ; TODO: change parentmenu's for menu-items with submenus?
             ; TODO: create function that determines if a menu has submenus?
             ; i.e.: select menus where parent-menu-id = a-parent-menu-id
+            ; TODO: show-menu on parent if b is chosen.
             (progn
               (format t "DEBUG: ~a" l-retval)
               (show-menu (+ 1 a-parent-menu-id)))
