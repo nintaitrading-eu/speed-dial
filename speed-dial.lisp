@@ -55,6 +55,14 @@
   "Return the menu options from the given menu-items."
   (map 'list (lambda (x) (getf x :KEYCHAR)) a-menu-items))
 
+(defun get-menu-commands (a-menu-items)
+  "Return the commands from the given menu-items."
+  (map 'list (lambda (x) (getf x :COMMAND)) a-menu-items))
+
+(defun get-menu-messages (a-menu-items)
+  "Return the messages + durations from the given menu-items."
+  (map 'list (lambda (x) (append  (getf x :MESSAGE) (getf x :MESSAGE-DURATION-SECONDS))) a-menu-items))
+
 (defun get-menu-ending (a-parent-menu-id)
   "Return extra options to the menu, for quitting
 the program and/or going back one level."
