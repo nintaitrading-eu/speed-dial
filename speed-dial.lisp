@@ -40,7 +40,7 @@
 ;  (print (filter-menu-items a-menu-id))
 ;  (sort (remove-duplicates (filter-menu-items a-menu-id)) #'string<= :key #'second))
 
-; TODO: Idea: loop over lists and cons the getf KEYCHAR into a new list.
+; TODO: Filter, based on a-menu-id.
 (defun retrieve-menu-options (a-menu-id)
   "Retrieves the menu-options for a given parent-menu-id."
 ; Example:
