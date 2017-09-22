@@ -62,7 +62,8 @@ the program and/or going back one level."
 ; See the make-cd function?
 (cond
   ((> a-parent-menu-id -1)
-   (get-menu-items '((:PARENT-MENU-ID a-parent-menu-id :MENU-ID (+ 1 a-parent-menu-id) :TITLE "back" :KEYCHAR b :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))
+   (append (get-menu-items '((:PARENT-MENU-ID a-parent-menu-id :MENU-ID (+ 1 a-parent-menu-id) :TITLE "back" :KEYCHAR b :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0)))
+           (get-menu-items '((:PARENT-MENU-ID a-parent-menu-id :MENU-ID (+ 1 a-parent-menu-id) :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0)))))
   (t (get-menu-items '((:PARENT-MENU-ID a-parent-menu-id :MENU-ID (+ 1 a-parent-menu-id) :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))))
 
 (defun select (selector-fn a-menu-items)
