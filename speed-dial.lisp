@@ -88,19 +88,16 @@ This also starts the option parsing loop."
     (force-output) ; Note: The prompt came later. Bufferd output in combination with the read function perhaps?
     (let ((l-retval (ask-for-option (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*)))))
         (if l-retval
-            ; TODO: change parentmenu's for menu-items with submenus?
-            ; TODO: create function that determines if a menu has submenus?
-            ; i.e.: select menus where parent-menu-id = a-parent-menu-id
-            ; TODO: show-menu on parent if b is chosen.
-            (progn
-              (format t "DEBUG: ~a" l-retval)
-              (show-menu (+ 1 a-parent-menu-id)))
+            (cond ((equalp l-retval 'b) (show-menu (- a-parent-menu-id 1)))
+                ((equalp l-retval 'q) (speed-dial::run-quit *c-sh-cmd*))
+                (t (show-menu (+ 1 a-parent-menu-id))))
           (speed-dial::run-quit *c-sh-cmd*)))))
 
 (defun ask-for-option (a-choice-list)
   "Ask for an option and react to it in the appropriate way."
   (let ((l-choice (read)))
     (cond ((member l-choice a-choice-list) (progn (run-choice l-choice) l-choice))
+          ((equalp l-choice 'b) l-choice)
           ((equalp l-choice 'q) nil)
           (t (progn (speed-dial::print-menu-error) t)))))
 
@@ -109,8 +106,7 @@ This also starts the option parsing loop."
   (progn
     ; TODO: do something else than printing
     (format t "~a chosen~%" (string-downcase (symbol-name a-choice)))
-    (sleep 1)
-    ))
+    (sleep 1)))
 
 ; TODO: how to implement current-basedir-program-name
 ;(defun list-of-menus (a-menu-items-conf)
