@@ -55,30 +55,26 @@
   "Return the menu options from the given menu-items."
   (map 'list (lambda (x) (getf x :KEYCHAR)) a-menu-items))
 
-(defun get-menu-ending (a-menu-id)
+(defun get-menu-ending (a-parent-menu-id)
   "Return extra options to the menu, for quitting
 the program and/or going back one level."
 ; TODO: use a macro for generating a menu item?
 ; See the make-cd function?
 (cond
-  ((> a-menu-id 0)
-    (get-menu-items '((:PARENT-MENU-ID (-1 a-menu-id) :MENU-ID a-menu-id :TITLE "back" :KEYCHAR b :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))
-  ((equal a-menu-id 0)
-    (get-menu-items '((:PARENT-MENU-ID (-1 a-menu-id) :MENU-ID a-menu-id :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))
-  (t (format nil ""))))
+  ((> a-parent-menu-id -1)
+   (get-menu-items '((:PARENT-MENU-ID a-parent-menu-id :MENU-ID (+ 1 a-parent-menu-id) :TITLE "back" :KEYCHAR b :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))
+  (t (get-menu-items '((:PARENT-MENU-ID a-parent-menu-id :MENU-ID (+ 1 a-parent-menu-id) :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))))
 
 (defun select (selector-fn a-menu-items)
   "Select only menu-items with the given selector."
   (remove-if-not selector-fn a-menu-items))
 
-(defun where (&key a-parent-menu-id a-menu-id)
-  "Where clause for filtering on a combination of parent-menu-id and menu-id."
+(defun where (&key a-parent-menu-id)
+  "Where clause for filtering menus of a given parent-menu-id."
   #'(lambda (a-menu-item)
-    (and
-      (if a-parent-menu-id (equal (getf a-menu-item :PARENT-MENU-ID) a-parent-menu-id) t)
-      (if a-menu-id (equal (getf a-menu-item :MENU-ID) a-menu-id) t))))
+      (if a-parent-menu-id (equal (getf a-menu-item :PARENT-MENU-ID) a-parent-menu-id) t)))
 
-(defun show-menu (a-parent-menu-id a-menu-id)
+(defun show-menu (a-parent-menu-id)
   "Show the menu, as given by the list a-menus.
 Note: Used for displaying the main menu.
 This also starts the option parsing loop."
@@ -86,19 +82,24 @@ This also starts the option parsing loop."
     (speed-dial::sh *c-sh-cmd* "clear")
     (format t "~a~{~a~}~{~a~}~a"
       (speed-dial::get-header "Menu")
-      (get-menu-items (select (where :a-parent-menu-id a-parent-menu-id :a-menu-id a-menu-id) *menu-items*))
-      (get-menu-ending a-menu-id)
+      (get-menu-items (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*))
+      (get-menu-ending a-parent-menu-id)
       *c-prompt*)
     (force-output) ; Note: The prompt came later. Bufferd output in combination with the read function perhaps?
-    (let ((l-retval (ask-for-option (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id :a-menu-id a-menu-id) *menu-items*)))))
+    (let ((l-retval (ask-for-option (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*)))))
         (if l-retval
-          (show-menu (- a-menu-id 1) a-menu-id)
+            ; TODO: change parentmenu's for menu-items with submenus?
+            ; TODO: create function that determines if a menu has submenus?
+            ; i.e.: select menus where parent-menu-id = a-parent-menu-id
+            (progn
+              (format t "DEBUG: ~a" l-retval)
+              (show-menu (+ 1 a-parent-menu-id)))
           (speed-dial::run-quit *c-sh-cmd*)))))
 
 (defun ask-for-option (a-choice-list)
   "Ask for an option and react to it in the appropriate way."
   (let ((l-choice (read)))
-    (cond ((member l-choice a-choice-list) (progn (run-choice l-choice) t))
+    (cond ((member l-choice a-choice-list) (progn (run-choice l-choice) l-choice))
           ((equalp l-choice 'q) nil)
           (t (progn (speed-dial::print-menu-error) t)))))
 
@@ -107,7 +108,8 @@ This also starts the option parsing loop."
   (progn
     ; TODO: do something else than printing
     (format t "~a chosen~%" (string-downcase (symbol-name a-choice)))
-    (sleep 1)))
+    (sleep 1)
+    ))
 
 ; TODO: how to implement current-basedir-program-name
 ;(defun list-of-menus (a-menu-items-conf)
@@ -134,6 +136,6 @@ This also starts the option parsing loop."
   ;(print (speed-dial::load-lines-from-file *c-speed-dial-menu-items* *c-comment-chars*)))
   (progn
     (load-menu-items *c-speed-dial-menu-items*) ; TODO: implement the xdg_basedir logic
-    (show-menu -1 0)))
+    (show-menu -1)))
 
 (main)
