@@ -94,7 +94,7 @@ This also starts the option parsing loop."
       (get-menu-items (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*))
       (get-menu-ending a-parent-menu-id)
       *c-prompt*)
-    (force-output) ; Note: The prompt came later. Bufferd output in combination with the read function perhaps?
+    (force-output) ; Note: The prompt came later. Buffered output in combination with the read function perhaps?
     (let ((l-retval (ask-for-option (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*)))))
         (if l-retval
           (cond ((equalp l-retval 'b) (if (equalp a-parent-menu-id -1)
@@ -106,6 +106,10 @@ This also starts the option parsing loop."
 
 (defun ask-for-option (a-choice-list)
   "Ask for an option and react to it in the appropriate way."
+  ; TODO: don't do the run-choice here, se we can remove the progn in the first condition.
+  ; We also need to return something else then true, on error.
+  ; Then we can do r run-choice in the show-menu function.
+  ; This function should just test choices and return a value.
   (let ((l-choice (read)))
     (cond ((member l-choice a-choice-list) (progn (run-choice l-choice) l-choice))
           ((equalp l-choice 'b) l-choice)
