@@ -84,9 +84,7 @@ the program and/or going back one level."
       (if a-parent-menu-id (equal (getf a-menu-item :PARENT-MENU-ID) a-parent-menu-id) t)))
 
 (defun show-menu (a-parent-menu-id)
-  "Show the menu, as given by the list a-menus.
-Note: Used for displaying the main menu.
-This also starts the option parsing loop."
+  "Show the menu."
   (progn
     (speed-dial::sh *c-sh-cmd* "clear")
     (format t "~a~{~a~}~{~a~}~a"
