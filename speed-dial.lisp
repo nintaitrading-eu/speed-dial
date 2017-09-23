@@ -95,29 +95,34 @@ This also starts the option parsing loop."
       (get-menu-ending a-parent-menu-id)
       *c-prompt*)
     (force-output) ; Note: The prompt came later. Buffered output in combination with the read function perhaps?
-    (let (( l-options (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*))))
-      (let ((l-retval (ask-for-option l-options)))
-        (if l-retval
-          (cond ((equalp l-retval 'b) (if (equalp a-parent-menu-id -1)
-                                        (show-menu a-parent-menu-id)
-                                        (show-menu (- a-parent-menu-id 1))))
-                ((equalp l-retval 'q) (speed-dial::run-quit *c-sh-cmd*))
-                ((member l-retval l-options)
-                  ; TODO: when has submenu, end with: (show-menu (+ 1 a-parent-menu-id)
-                  ; also execute commands.
-                  (progn
-                    (format t "exec commands here...")
-                    (force-output) ; Note: To solve another issue with buffered output.
-                    (sleep 1)
-                    (show-menu a-parent-menu-id) ; TODO: submenu when needed
-                    ))
-                (t (show-menu a-parent-menu-id)))
-          (speed-dial::run-quit *c-sh-cmd*))))))
+    (let (( l-valid-options (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*))))
+      (let ((l-retval (ask-for-option l-valid-options)))
+        (process-chosen-option l-retval l-valid-options a-parent-menu-id)))))
 
-(defun ask-for-option (a-choice-list)
+(defun process-chosen-option (a-option a-valid-options a-parent-menu-id)
+  "When a menu option is chosen, this function does the processing
+of that option."
+  (if a-option
+    (cond ((equalp a-option 'b) (if (equalp a-parent-menu-id -1)
+                                    (show-menu a-parent-menu-id)
+                                    (show-menu (- a-parent-menu-id 1))))
+          ((equalp a-option 'q) (speed-dial::run-quit *c-sh-cmd*))
+          ((member a-option a-valid-options)
+            ; TODO: when has submenu, end with: (show-menu (+ 1 a-parent-menu-id)
+            ; also execute commands.
+            (progn
+              (format t "exec commands here...")
+              (force-output) ; Note: To solve another issue with buffered output.
+              (sleep 1)
+              (show-menu a-parent-menu-id) ; TODO: submenu when needed
+              ))
+          (t (show-menu a-parent-menu-id)))
+    (speed-dial::run-quit *c-sh-cmd*)))
+
+(defun ask-for-option (a-valid-options)
   "Ask for an option and react to it in the appropriate way."
   (let ((l-choice (read)))
-    (cond ((member l-choice a-choice-list) l-choice)
+    (cond ((member l-choice a-valid-options) l-choice)
           ((equalp l-choice 'b) l-choice)
           ((equalp l-choice 'q) nil)
           (t (progn (speed-dial::print-menu-error) t)))))
