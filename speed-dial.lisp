@@ -115,14 +115,13 @@ of that option."
           ((member a-option a-valid-options)
             ; TODO: when has submenu, end with: (show-menu (+ 1 a-parent-menu-id)
             ; also execute commands.
-            (progn
-              ; TODO: Multiple messages are returned. Need to expand the where clause, so we can give a variable number
-              ; of arguments. Check practical common lisp for this.
-              (format t "DEBUG: messages = ~a" (car (get-menu-messages (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*))))
+            ; TODO: Multiple messages are returned. Need to expand the where clause, so we can give a variable number
+            ; of arguments. Check practical common lisp for this.
+            (let ((l-message-with-duration (car (get-menu-messages (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*)))))
+              (format t "DEBUG: messages = ~a" l-message-with-duration)
               (force-output) ; Note: To solve another issue with buffered output.
               (sleep 1)
-              (show-menu a-parent-menu-id) ; TODO: submenu when needed
-              ))
+              (show-menu a-parent-menu-id)))
           (t (show-menu a-parent-menu-id)))
     (speed-dial::run-quit *c-sh-cmd*)))
 
