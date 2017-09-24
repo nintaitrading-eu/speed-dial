@@ -78,10 +78,17 @@ the program and/or going back one level."
   "Select only menu-items with the given selector."
   (remove-if-not selector-fn a-menu-items))
 
-(defun where (&key a-parent-menu-id)
-  "Where clause for filtering menus of a given parent-menu-id."
+(defun where (&key a-parent-menu-id a-menu-id a-title a-keychar a-command a-message a-message-duration-seconds)
+  "Where clause for filtering menus."
   #'(lambda (x)
-      (if a-parent-menu-id (equal (getf x :PARENT-MENU-ID) a-parent-menu-id) t)))
+      (and
+        (if a-parent-menu-id (equal (getf x :PARENT-MENU-ID) a-parent-menu-id) t)   
+        (if a-menu-id (equal (getf x :MENU-ID) a-menu-id) t)   
+        (if a-title (equal (getf x :TITLE) a-title) t)   
+        (if a-keychar (equal (getf x :KEYCHAR) a-keychar) t)   
+        (if a-command (equal (getf x :COMMAND) a-command) t)   
+        (if a-message (equal (getf x :MESSAGE) a-message) t)   
+        (if a-message-duration-seconds (equal (getf x :MESSAGE-DURATION-SECONDS) a-message-duration-seconds) t))))
 
 (defun show-menu (a-parent-menu-id)
   "Show the menu."
