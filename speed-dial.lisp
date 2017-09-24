@@ -118,7 +118,7 @@ of that option."
             (progn
               ; TODO: Multiple messages are returned. Need to expand the where clause, so we can give a variable number
               ; of arguments. Check practical common lisp for this.
-              (format t "DEBUG: messages = ~a" (get-menu-messages (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*)))
+              (format t "DEBUG: messages = ~a" (car (get-menu-messages (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*))))
               (force-output) ; Note: To solve another issue with buffered output.
               (sleep 1)
               (show-menu a-parent-menu-id) ; TODO: submenu when needed
