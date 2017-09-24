@@ -61,7 +61,7 @@
 
 (defun get-menu-messages (a-menu-items)
   "Return the messages + durations from the given menu-items."
-  (map 'list (lambda (x) (append  (getf x :MESSAGE) (getf x :MESSAGE-DURATION-SECONDS))) a-menu-items))
+  (map 'list (lambda (x) (append (list (getf x :MESSAGE)) (list (getf x :MESSAGE-DURATION-SECONDS)))) a-menu-items))
 
 (defun get-menu-ending (a-parent-menu-id)
   "Return extra options to the menu, for quitting
@@ -80,8 +80,8 @@ the program and/or going back one level."
 
 (defun where (&key a-parent-menu-id)
   "Where clause for filtering menus of a given parent-menu-id."
-  #'(lambda (a-menu-item)
-      (if a-parent-menu-id (equal (getf a-menu-item :PARENT-MENU-ID) a-parent-menu-id) t)))
+  #'(lambda (x)
+      (if a-parent-menu-id (equal (getf x :PARENT-MENU-ID) a-parent-menu-id) t)))
 
 (defun show-menu (a-parent-menu-id)
   "Show the menu."
@@ -93,7 +93,7 @@ the program and/or going back one level."
       (get-menu-ending a-parent-menu-id)
       *c-prompt*)
     (force-output) ; Note: The prompt came later. Buffered output in combination with the read function perhaps?
-    (let (( l-valid-options (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*))))
+    (let ((l-valid-options (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*))))
       (let ((l-retval (ask-for-option l-valid-options)))
         (process-chosen-option l-retval l-valid-options a-parent-menu-id)))))
 
@@ -109,7 +109,9 @@ of that option."
             ; TODO: when has submenu, end with: (show-menu (+ 1 a-parent-menu-id)
             ; also execute commands.
             (progn
-              (format t "exec commands here...")
+              ; TODO: Multiple messages are returned. Need to expand the where clause, so we can give a variable number
+              ; of arguments. Check practical common lisp for this.
+              (format t "DEBUG: messages = ~a" (get-menu-messages (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*)))
               (force-output) ; Note: To solve another issue with buffered output.
               (sleep 1)
               (show-menu a-parent-menu-id) ; TODO: submenu when needed
