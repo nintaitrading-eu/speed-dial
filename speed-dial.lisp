@@ -130,7 +130,8 @@ of that option."
                   (progn
                     (format t "DEBUG: we have a command: ~a" l-command)
                     (force-output)
-                    (sleep 1)))
+                    (sleep 1)
+                    (run-command l-command)))
               (show-menu a-parent-menu-id)))
           (t (show-menu a-parent-menu-id)))
     (speed-dial::run-quit *c-sh-cmd*)))
@@ -143,12 +144,9 @@ of that option."
           ((equalp l-choice 'q) nil)
           (t (progn (speed-dial::print-menu-error) t)))))
 
-(defun run-choice (a-choice)
-  "Execute the correct action, belonging to the chosen option for that menu-item."
-  (progn
-    ; TODO: do something else than printing
-    (format t "~a chosen~%" (string-downcase (symbol-name a-choice)))
-    (sleep 1)))
+(defun run-command (a-command)
+  "This function runs a shell command, via inferior-shell."
+  (inferior-shell:run/ss a-command))  
 
 ; TODO: how to implement current-basedir-program-name
 ;(defun list-of-menus (a-menu-items-conf)

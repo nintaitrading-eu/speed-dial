@@ -5,7 +5,8 @@
   :author "Your Name <your.name@example.com>"
   :license "Specify license here"
   :depends-on (#:quicklisp
-               #:split-sequence)
+               #:split-sequence
+               #:inferior-shell)
   :serial t
   :components ((:file "package")
                (:file "menu-functions")
