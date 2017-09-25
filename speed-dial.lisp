@@ -118,7 +118,12 @@ of that option."
             ; TODO: Multiple messages are returned. Need to expand the where clause, so we can give a variable number
             ; of arguments. Check practical common lisp for this.
             (let ((l-message-with-duration (car (get-menu-messages (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*)))))
-              (format t "DEBUG: messages = ~a" l-message-with-duration)
+              ;(format t "DEBUG: ~a | ~a~%" l-message-with-duration (cadr l-message-with-duration))
+              (if (car l-message-with-duration)
+                  (progn
+                    (format t "~a~%" (car l-message-with-duration))
+                    ; TODO: what if duration is nil or invalid?
+                    (sleep (cadr l-message-with-duration))))
               (force-output) ; Note: To solve another issue with buffered output.
               (sleep 1)
               (show-menu a-parent-menu-id)))
