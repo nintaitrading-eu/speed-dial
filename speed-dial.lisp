@@ -117,15 +117,20 @@ of that option."
             ; also execute commands.
             ; TODO: Multiple messages are returned. Need to expand the where clause, so we can give a variable number
             ; of arguments. Check practical common lisp for this.
-            (let ((l-message-with-duration (car (get-menu-messages (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*)))))
-              ;(format t "DEBUG: ~a | ~a~%" l-message-with-duration (cadr l-message-with-duration))
-              (if (car l-message-with-duration)
+            (let ((l-message-with-duration (car (get-menu-messages (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*))))
+                  (l-command (car (get-menu-commands (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*)))))
+              (format t "DEBUG: ~a~%" l-command)
+              (if (not (= (length (car l-message-with-duration)) 0))
                   (progn
                     (format t "~a~%" (car l-message-with-duration))
                     ; TODO: what if duration is nil or invalid?
-                    (sleep (cadr l-message-with-duration))))
-              (force-output) ; Note: To solve another issue with buffered output.
-              (sleep 1)
+                    (sleep (cadr l-message-with-duration))
+                    (force-output))) ; Note: To solve another issue with buffered output.
+              (if (not (= (length l-command) 0))
+                  (progn
+                    (format t "DEBUG: we have a command: ~a" l-command)
+                    (force-output)
+                    (sleep 1)))
               (show-menu a-parent-menu-id)))
           (t (show-menu a-parent-menu-id)))
     (speed-dial::run-quit *c-sh-cmd*)))
