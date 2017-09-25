@@ -82,12 +82,12 @@ the program and/or going back one level."
   "Where clause for filtering menus."
   #'(lambda (x)
       (and
-        (if a-parent-menu-id (equal (getf x :PARENT-MENU-ID) a-parent-menu-id) t)   
-        (if a-menu-id (equal (getf x :MENU-ID) a-menu-id) t)   
-        (if a-title (equal (getf x :TITLE) a-title) t)   
-        (if a-keychar (equal (getf x :KEYCHAR) a-keychar) t)   
-        (if a-command (equal (getf x :COMMAND) a-command) t)   
-        (if a-message (equal (getf x :MESSAGE) a-message) t)   
+        (if a-parent-menu-id (equal (getf x :PARENT-MENU-ID) a-parent-menu-id) t)
+        (if a-menu-id (equal (getf x :MENU-ID) a-menu-id) t)
+        (if a-title (equal (getf x :TITLE) a-title) t)
+        (if a-keychar (equal (getf x :KEYCHAR) a-keychar) t)
+        (if a-command (equal (getf x :COMMAND) a-command) t)
+        (if a-message (equal (getf x :MESSAGE) a-message) t)
         (if a-message-duration-seconds (equal (getf x :MESSAGE-DURATION-SECONDS) a-message-duration-seconds) t))))
 
 (defun show-menu (a-parent-menu-id)
@@ -146,7 +146,7 @@ of that option."
 
 (defun run-command (a-command)
   "This function runs a shell command, via inferior-shell."
-  (inferior-shell:run/ss a-command))  
+  (inferior-shell:run/ss a-command))
 
 ; TODO: how to implement current-basedir-program-name
 ;(defun list-of-menus (a-menu-items-conf)
