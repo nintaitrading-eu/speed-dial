@@ -146,7 +146,7 @@ of that option."
 
 (defun run-command (a-command)
   "This function runs a shell command, via inferior-shell."
-  (inferior-shell:run/ss a-command))
+  (inferior-shell:run/ss `(inferior-shell:pipe (,a-command))))
 
 ; TODO: how to implement current-basedir-program-name
 ;(defun list-of-menus (a-menu-items-conf)
