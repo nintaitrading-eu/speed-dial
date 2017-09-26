@@ -128,7 +128,6 @@ of that option."
                     (force-output))) ; Note: To solve another issue with buffered output.
               (if (not (= (length l-command) 0))
                   (progn
-                    (format t "DEBUG: we have a command: ~a" l-command)
                     (force-output)
                     (sleep 1)
                     (run-command l-command)))
