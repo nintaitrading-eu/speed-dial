@@ -40,12 +40,9 @@
 ;  (print (filter-menu-items a-menu-id))
 ;  (sort (remove-duplicates (filter-menu-items a-menu-id)) #'string<= :key #'second))
 
-(defun get-keychar (a-menu-item)
-  "Get the KEYCHAR from a menu-item list."
-  ; Example:
-  ; '(-1 0 1 "a"...)
-  ; gives ("a")
-  (getf a-menu-item :KEYCHAR))
+(defun get-parent-menu-id (a-menu-id)
+  "Return the parent-menu the given menu-id"
+  (car (map 'list (lambda (x) (getf x :PARENT-MENU-ID)) (select (where :a-menu-id a-menu-id)))))
 
 (defun get-menu-items (a-menu-items)
   "Return the given menu-items in a nicely formatted form."
@@ -63,75 +60,79 @@
   "Return the messages + durations from the given menu-items."
   (map 'list (lambda (x) (append (list (getf x :MESSAGE)) (list (getf x :MESSAGE-DURATION-SECONDS)))) a-menu-items))
 
-(defun get-menu-ending (a-parent-menu-id)
+(defun get-menu-ending (a-menu-id)
   "Return extra options to the menu, for quitting
 the program and/or going back one level."
 ; TODO: use a macro for generating a menu item?
 ; See the make-cd function?
 (cond
-  ((> a-parent-menu-id -1)
-   (append (get-menu-items '((:PARENT-MENU-ID a-parent-menu-id :MENU-ID (+ 1 a-parent-menu-id) :TITLE "back" :KEYCHAR b :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0)))
-           (get-menu-items '((:PARENT-MENU-ID a-parent-menu-id :MENU-ID (+ 1 a-parent-menu-id) :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0)))))
-  (t (get-menu-items '((:PARENT-MENU-ID a-parent-menu-id :MENU-ID (+ 1 a-parent-menu-id) :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))))
+  ((> a-menu-id 0)
+   ; TODO: add parent-menu-id etc.
+   ; But what parent-menu-id to add for back
+   (append (get-menu-items '((:MENU-ID a-menu-id :TITLE "back" :KEYCHAR b :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0)))
+           (get-menu-items '((:MENU-ID a-menu-id :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0)))))
+  (t (get-menu-items '((:MENU-ID a-menu-id :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))))
 
 (defun select (selector-fn a-menu-items)
   "Select only menu-items with the given selector."
   (remove-if-not selector-fn a-menu-items))
 
-(defun where (&key a-parent-menu-id a-menu-id a-title a-keychar a-command a-message a-message-duration-seconds)
+(defun where (&key a-menu-item-id a-menu-id a-parent-menu-id a-child-menu-id a-title a-keychar a-command a-message a-message-duration-seconds)
   "Where clause for filtering menus."
   #'(lambda (x)
       (and
-        (if a-parent-menu-id (equal (getf x :PARENT-MENU-ID) a-parent-menu-id) t)
+        (if a-menu-item-id (equal (getf x :MENU-ITEM-ID) a-menu-item-id) t)
         (if a-menu-id (equal (getf x :MENU-ID) a-menu-id) t)
+        (if a-parent-menu-id (equal (getf x :PARENT-MENU-ID) a-parent-menu-id) t)
+        (if a-child-menu-id (equal (getf x :CHILD-MENU-ID) a-child-menu-id) t)
         (if a-title (equal (getf x :TITLE) a-title) t)
         (if a-keychar (equal (getf x :KEYCHAR) a-keychar) t)
         (if a-command (equal (getf x :COMMAND) a-command) t)
         (if a-message (equal (getf x :MESSAGE) a-message) t)
         (if a-message-duration-seconds (equal (getf x :MESSAGE-DURATION-SECONDS) a-message-duration-seconds) t))))
 
-(defun show-menu (a-parent-menu-id)
+(defun show-menu (a-menu-id)
   "Show the menu."
   (progn
     (speed-dial::sh *c-sh-cmd* "clear")
     (format t "~a~{~a~}~{~a~}~a"
       (speed-dial::get-header "Menu")
-      (get-menu-items (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*))
-      (get-menu-ending a-parent-menu-id)
+      (get-menu-items (select (where :a-menu-id a-menu-id) *menu-items*))
+      (get-menu-ending a-menu-id)
       *c-prompt*)
     (force-output) ; Note: The prompt came later. Buffered output in combination with the read function perhaps?
-    (let ((l-valid-options (get-menu-options (select (where :a-parent-menu-id a-parent-menu-id) *menu-items*))))
+    (let ((l-valid-options (get-menu-options (select (where :a-menu-id a-menu-id) *menu-items*))))
       (let ((l-retval (ask-for-option l-valid-options)))
-        (process-chosen-option l-retval l-valid-options a-parent-menu-id)))))
+        (process-chosen-option l-retval l-valid-options a-menu-id)))))
 
-(defun process-chosen-option (a-option a-valid-options a-parent-menu-id)
+(defun process-chosen-option (a-option a-valid-options a-menu-id)
   "When a menu option is chosen, this function does the processing
 of that option."
   (if a-option
-    (cond ((equalp a-option 'b) (if (equalp a-parent-menu-id -1)
-                                    (show-menu a-parent-menu-id)
-                                    (show-menu (- a-parent-menu-id 1))))
+    (cond ((equalp a-option 'b) (if (equalp a-menu-id 0)
+                                    (show-menu a-menu-id)
+                                    (show-menu (get-parent-menu-id a-menu-id))))
           ((equalp a-option 'q) (speed-dial::run-quit *c-sh-cmd*))
           ((member a-option a-valid-options)
             ; TODO: when has submenu, end with: (show-menu (+ 1 a-parent-menu-id)
             ; also execute commands.
             ; TODO: Multiple messages are returned. Need to expand the where clause, so we can give a variable number
             ; of arguments. Check practical common lisp for this.
-            (let ((l-message-with-duration (car (get-menu-messages (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*))))
-                  (l-command (car (get-menu-commands (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*)))))
+            (let ((l-message-with-duration (car (get-menu-messages (select (where :a-menu-id a-menu-id :a-keychar a-option) *menu-items*))))
+                  (l-command (car (get-menu-commands (select (where :a-menu-id a-menu-id :a-keychar a-option) *menu-items*)))))
               (if (not (= (length (car l-message-with-duration)) 0))
                   (progn
                     (format t "~a~%" (car l-message-with-duration))
-                    ; TODO: what if duration is nil or invalid?
-                    (sleep (cadr l-message-with-duration))
+                    (if (cadr l-message-with-duration)
+                        (sleep (cadr l-message-with-duration)))
                     (force-output))) ; Note: To solve another issue with buffered output.
               (if (not (= (length l-command) 0))
                   (progn
                     (force-output)
                     (sleep 1)
                     (run-command l-command)))
-              (show-menu a-parent-menu-id)))
-          (t (show-menu a-parent-menu-id)))
+              (show-menu a-menu-id)))
+          (t (show-menu a-menu-id)))
     (speed-dial::run-quit *c-sh-cmd*)))
 
 (defun ask-for-option (a-valid-options)
@@ -171,6 +172,6 @@ of that option."
   ;(print (speed-dial::load-lines-from-file *c-speed-dial-menu-items* *c-comment-chars*)))
   (progn
     (load-menu-items *c-speed-dial-menu-items*) ; TODO: implement the xdg_basedir logic
-    (show-menu -1)))
+    (show-menu 0)))
 
 (main)
