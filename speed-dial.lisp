@@ -40,9 +40,13 @@
 ;  (print (filter-menu-items a-menu-id))
 ;  (sort (remove-duplicates (filter-menu-items a-menu-id)) #'string<= :key #'second))
 
-(defun get-parent-menu-id (a-menu-id)
-  "Return the parent-menu the given menu-id"
-  (car (map 'list (lambda (x) (getf x :PARENT-MENU-ID)) (select (where :a-menu-id a-menu-id)))))
+(defun get-parent-menu-id (a-menu-id a-menu-items)
+  "Return the parent-menu-id, based on the given menu-id."
+  (car (map 'list (lambda (x) (getf x :PARENT-MENU-ID)) (select (where :a-menu-id a-menu-id) a-menu-items))))
+
+(defun get-child-menu-id (a-keychar a-menu-id a-menu-items)
+  "Return the child-menu-id, based on the given menu-id."
+  (car (map 'list (lambda (x) (getf x :CHILD-MENU-ID)) (select (where :a-keychar a-keychar :a-menu-id a-menu-id) a-menu-items))))
 
 (defun get-menu-items (a-menu-items)
   "Return the given menu-items in a nicely formatted form."
@@ -67,26 +71,44 @@ the program and/or going back one level."
 ; See the make-cd function?
 (cond
   ((> a-menu-id 0)
-   ; TODO: add parent-menu-id etc.
-   ; But what parent-menu-id to add for back
-   (append (get-menu-items '((:MENU-ID a-menu-id :TITLE "back" :KEYCHAR b :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0)))
-           (get-menu-items '((:MENU-ID a-menu-id :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0)))))
-  (t (get-menu-items '((:MENU-ID a-menu-id :TITLE "quit" :KEYCHAR q :COMMAND "" :MESSAGE "" :MESSAGE-DURATION-SECONDS 0))))))
+   (append (get-menu-items '((:KEYCHAR b
+                              :MENU-ID a-menu-id
+                              :PARENT-MENU-ID (get-parent-menu-id a-menu-id *menu-items*)
+                              :CHILD-MENU-ID a-menu-id
+                              :TITLE "back"
+                              :COMMAND ""
+                              :MESSAGE ""
+                              :MESSAGE-DURATION-SECONDS 0)))
+           (get-menu-items '((:KEYCHAR q
+                              :MENU-ID a-menu-id
+                              :PARENT-MENU-ID (get-parent-menu-id a-menu-id *menu-items*)
+                              :CHILD-MENU-ID a-menu-id
+                              :TITLE "quit"
+                              :COMMAND ""
+                              :MESSAGE ""
+                              :MESSAGE-DURATION-SECONDS 0)))))
+  (t (get-menu-items '((:KEYCHAR q
+                        :MENU-ID a-menu-id
+                        :PARENT-MENU-ID (get-parent-menu-id a-menu-id *menu-items*)
+                        :CHILD-MENU-ID a-menu-id
+                        :TITLE "quit"
+                        :COMMAND ""
+                        :MESSAGE ""
+                        :MESSAGE-DURATION-SECONDS 0))))))
 
 (defun select (selector-fn a-menu-items)
   "Select only menu-items with the given selector."
   (remove-if-not selector-fn a-menu-items))
 
-(defun where (&key a-menu-item-id a-menu-id a-parent-menu-id a-child-menu-id a-title a-keychar a-command a-message a-message-duration-seconds)
+(defun where (&key a-keychar a-menu-id a-parent-menu-id a-child-menu-id a-title a-command a-message a-message-duration-seconds)
   "Where clause for filtering menus."
   #'(lambda (x)
       (and
-        (if a-menu-item-id (equal (getf x :MENU-ITEM-ID) a-menu-item-id) t)
+        (if a-keychar (equal (getf x :KEYCHAR) a-keychar) t)
         (if a-menu-id (equal (getf x :MENU-ID) a-menu-id) t)
         (if a-parent-menu-id (equal (getf x :PARENT-MENU-ID) a-parent-menu-id) t)
         (if a-child-menu-id (equal (getf x :CHILD-MENU-ID) a-child-menu-id) t)
         (if a-title (equal (getf x :TITLE) a-title) t)
-        (if a-keychar (equal (getf x :KEYCHAR) a-keychar) t)
         (if a-command (equal (getf x :COMMAND) a-command) t)
         (if a-message (equal (getf x :MESSAGE) a-message) t)
         (if a-message-duration-seconds (equal (getf x :MESSAGE-DURATION-SECONDS) a-message-duration-seconds) t))))
@@ -111,15 +133,11 @@ of that option."
   (if a-option
     (cond ((equalp a-option 'b) (if (equalp a-menu-id 0)
                                     (show-menu a-menu-id)
-                                    (show-menu (get-parent-menu-id a-menu-id))))
+                                    (show-menu (get-parent-menu-id a-menu-id *menu-items*))))
           ((equalp a-option 'q) (speed-dial::run-quit *c-sh-cmd*))
           ((member a-option a-valid-options)
-            ; TODO: when has submenu, end with: (show-menu (+ 1 a-parent-menu-id)
-            ; also execute commands.
-            ; TODO: Multiple messages are returned. Need to expand the where clause, so we can give a variable number
-            ; of arguments. Check practical common lisp for this.
-            (let ((l-message-with-duration (car (get-menu-messages (select (where :a-menu-id a-menu-id :a-keychar a-option) *menu-items*))))
-                  (l-command (car (get-menu-commands (select (where :a-menu-id a-menu-id :a-keychar a-option) *menu-items*)))))
+            (let ((l-message-with-duration (car (get-menu-messages (select (where :a-keychar a-option :a-menu-id a-menu-id) *menu-items*))))
+                  (l-command (car (get-menu-commands (select (where :a-keychar a-option :a-menu-id a-menu-id) *menu-items*)))))
               (if (not (= (length (car l-message-with-duration)) 0))
                   (progn
                     (format t "~a~%" (car l-message-with-duration))
@@ -127,12 +145,9 @@ of that option."
                         (sleep (cadr l-message-with-duration)))
                     (force-output))) ; Note: To solve another issue with buffered output.
               (if (not (= (length l-command) 0))
-                  (progn
-                    (force-output)
-                    (sleep 1)
-                    (run-command l-command)))
-              (show-menu a-menu-id)))
-          (t (show-menu a-menu-id)))
+                  (run-command l-command))
+              (show-menu (get-child-menu-id a-option a-menu-id *menu-items*))))
+          (t (show-menu (get-child-menu-id a-option a-menu-id *menu-items*))))
     (speed-dial::run-quit *c-sh-cmd*)))
 
 (defun ask-for-option (a-valid-options)
@@ -143,7 +158,7 @@ of that option."
           ((equalp l-choice 'q) nil)
           (t (progn (speed-dial::print-menu-error) t)))))
 
-(defun run-command (a-command)
+(defun run-command (a-command-pipe)
   "This function runs a shell command, via inferior-shell."
   (inferior-shell:run/ss `(inferior-shell:pipe (,a-command))))
 
