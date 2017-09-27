@@ -1,3 +1,21 @@
 = speed-dial
 
 Command line menu for easy access to applications and urls.
+
+== Details
+
+The application reads a number of menu-entry details, from a config file and automatically builds a working option menu for that data.
+The configuration file contains the menu layout (with links between parent and child-menu's, messages to display when an option is pressed, keychars to press for a menu-item, commands to execute, etc.
+This allows a user to build custom menu's in great detail, with the following possiblilities:
+- create your own cli menu system
+- link keychars to all the menu-options, for fast navigation
+- optionally display a message, when a menu-item is chosen
+- for a specified number of seconds
+- optionally execute a command
+
+== Configuration
+
+The menu-items are stored in speed-dial-menu-items.conf.
+
+TBD
+
