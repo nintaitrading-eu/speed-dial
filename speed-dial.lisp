@@ -119,7 +119,6 @@ of that option."
             ; of arguments. Check practical common lisp for this.
             (let ((l-message-with-duration (car (get-menu-messages (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*))))
                   (l-command (car (get-menu-commands (select (where :a-parent-menu-id a-parent-menu-id :a-keychar a-option) *menu-items*)))))
-              (format t "DEBUG: ~a~%" l-command)
               (if (not (= (length (car l-message-with-duration)) 0))
                   (progn
                     (format t "~a~%" (car l-message-with-duration))
