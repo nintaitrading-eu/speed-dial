@@ -1,0 +1,24 @@
+000_General
+  E-mail
+  Banking (recb00)
+  Banking (whsi00)
+001_Documentation
+  DocuWiki
+002_Project management
+  Zenhub
+  Bugzilla
+  Kanban
+003_Trading
+  Trading platform
+  Trading journal (ods)
+  Trading journal (Area91)
+004_Investing
+  Investican-pl 
+005_Reporting
+  Ledgerplot
+  Ledgerexport-tax
+999_Infrastructure
+  Backup
+  Offsite backup
+  Edit network diagram (dia)
+  View network diagram (DocuWiki)
