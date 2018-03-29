@@ -1,3 +1,0 @@
-= speed-dial
-
-Command line menu for easy access to applications and urls.
