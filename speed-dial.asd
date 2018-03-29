@@ -9,9 +9,9 @@
                #:inferior-shell)
   :serial t
   :components ((:file "package")
-               (:file "menu-functions")
                (:file "functions")
-               (:file "cl_generic/functions")
-               (:file "speed-dial" :depends-on ("package" "menu-functions" "functions" "cl_generic/functions"))
+               (:file "utils-cl/utils-string")
+               (:file "utils-cl/utils-file")
+               (:file "speed-dial" :depends-on ("package" "functions" "utils-cl/utils-string" "utils-cl/utils-file"))
                ))
 
