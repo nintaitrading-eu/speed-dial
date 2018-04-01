@@ -1,3 +1,5 @@
-# utils-cl
+= ntutils-cl
+
+Nintai Trading Common Lisp Utils.  +
 
 Generic functions in common lisp, usable across projects.

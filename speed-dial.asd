@@ -6,12 +6,11 @@
   :license "Specify license here"
   :depends-on (#:quicklisp
                #:split-sequence
-               #:inferior-shell)
+               #:inferior-shell
+               #:ntutils)
   :serial t
   :components ((:file "package")
                (:file "functions")
-               (:file "ntutils-cl/ntutils-string")
-               (:file "ntutils-cl/ntutils-file")
-               (:file "speed-dial" :depends-on ("package" "functions" "utils-cl/utils-string" "utils-cl/utils-file"))
+               (:file "speed-dial" :depends-on ("package" "functions"))
                ))
 
