@@ -10,8 +10,8 @@
   :serial t
   :components ((:file "package")
                (:file "functions")
-               (:file "utils-cl/utils-string")
-               (:file "utils-cl/utils-file")
+               (:file "ntutils-cl/ntutils-string")
+               (:file "ntutils-cl/ntutils-file")
                (:file "speed-dial" :depends-on ("package" "functions" "utils-cl/utils-string" "utils-cl/utils-file"))
                ))
 

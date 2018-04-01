@@ -1,3 +1,3 @@
-[submodule "utils-cl"]
-	path = utils-cl
-	url = git@github.com:rockwolf/nintaitrading-eu/utils-cl.git
+[submodule "ntutils-cl"]
+	path = ntutils-cl
+	url = git@github.com:rockwolf/nintaitrading-eu/ntutils-cl.git
