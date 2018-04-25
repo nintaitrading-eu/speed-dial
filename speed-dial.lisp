@@ -56,9 +56,13 @@
   "Return the menu options from the given menu-items."
   (map 'list (lambda (x) (getf x :KEYCHAR)) a-menu-items))
 
-(defun get-menu-commands (a-menu-items)
-  "Return the commands from the given menu-items."
-  (map 'list (lambda (x) (getf x :COMMAND)) a-menu-items))
+(defun get-menu-commands-sh (a-menu-items)
+  "Return the shell commands from the given menu-items."
+  (map 'list (lambda (x) (getf x :COMMAND-SH)) a-menu-items))
+
+(defun get-menu-commands-cl (a-menu-items)
+  "Return the common lisp commands from the given menu-items."
+  (map 'list (lambda (x) (getf x :COMMAND-CL)) a-menu-items))
 
 (defun get-menu-messages (a-menu-items)
   "Return the messages + durations from the given menu-items."
@@ -76,7 +80,8 @@ the program and/or going back one level."
                               :PARENT-MENU-ID (get-parent-menu-id a-menu-id *menu-items*)
                               :CHILD-MENU-ID a-menu-id
                               :TITLE "back"
-                              :COMMAND ""
+                              :COMMAND-SH ""
+                              :COMMAND-CL '()
                               :MESSAGE ""
                               :MESSAGE-DURATION-SECONDS 0)))
            (get-menu-items '((:KEYCHAR q
@@ -84,7 +89,8 @@ the program and/or going back one level."
                               :PARENT-MENU-ID (get-parent-menu-id a-menu-id *menu-items*)
                               :CHILD-MENU-ID a-menu-id
                               :TITLE "quit"
-                              :COMMAND ""
+                              :COMMAND-SH ""
+                              :COMMAND-CL '()
                               :MESSAGE ""
                               :MESSAGE-DURATION-SECONDS 0)))))
   (t (get-menu-items '((:KEYCHAR q
@@ -92,7 +98,8 @@ the program and/or going back one level."
                         :PARENT-MENU-ID (get-parent-menu-id a-menu-id *menu-items*)
                         :CHILD-MENU-ID a-menu-id
                         :TITLE "quit"
-                        :COMMAND ""
+                        :COMMAND-SH ""
+                        :COMMAND-CL '()
                         :MESSAGE ""
                         :MESSAGE-DURATION-SECONDS 0))))))
 
@@ -100,7 +107,7 @@ the program and/or going back one level."
   "Select only menu-items with the given selector."
   (remove-if-not selector-fn a-menu-items))
 
-(defun where (&key a-keychar a-menu-id a-parent-menu-id a-child-menu-id a-title a-command a-message a-message-duration-seconds)
+(defun where (&key a-keychar a-menu-id a-parent-menu-id a-child-menu-id a-title a-command-sh a-command-cl a-message a-message-duration-seconds)
   "Where clause for filtering menus."
   #'(lambda (x)
       (and
@@ -109,7 +116,8 @@ the program and/or going back one level."
         (if a-parent-menu-id (equal (getf x :PARENT-MENU-ID) a-parent-menu-id) t)
         (if a-child-menu-id (equal (getf x :CHILD-MENU-ID) a-child-menu-id) t)
         (if a-title (equal (getf x :TITLE) a-title) t)
-        (if a-command (equal (getf x :COMMAND) a-command) t)
+        (if a-command-sh (equal (getf x :COMMAND-SH) a-command-sh) t)
+        (if a-command-cl (equal (getf x :COMMAND-CL) a-command-cl) t)
         (if a-message (equal (getf x :MESSAGE) a-message) t)
         (if a-message-duration-seconds (equal (getf x :MESSAGE-DURATION-SECONDS) a-message-duration-seconds) t))))
 
@@ -137,15 +145,15 @@ of that option."
           ((equalp a-option 'q) (speed-dial::run-quit *c-sh-cmd*))
           ((member a-option a-valid-options)
             (let ((l-message-with-duration (car (get-menu-messages (select (where :a-keychar a-option :a-menu-id a-menu-id) *menu-items*))))
-                  (l-command (car (get-menu-commands (select (where :a-keychar a-option :a-menu-id a-menu-id) *menu-items*)))))
+                  (l-command-sh (car (get-menu-commands-sh (select (where :a-keychar a-option :a-menu-id a-menu-id) *menu-items*)))))
               (if (not (= (length (car l-message-with-duration)) 0))
                   (progn
                     (format t "~a~%" (car l-message-with-duration))
                     (if (cadr l-message-with-duration)
                         (sleep (cadr l-message-with-duration)))
                     (force-output))) ; Note: To solve another issue with buffered output.
-              (if (not (= (length l-command) 0))
-                  (run-command l-command))
+              (if (not (= (length l-command-sh) 0))
+                  (run-command-sh l-command-sh))
               (show-menu (get-child-menu-id a-option a-menu-id *menu-items*))))
           (t (show-menu (get-child-menu-id a-option a-menu-id *menu-items*))))
     (speed-dial::run-quit *c-sh-cmd*)))
@@ -158,7 +166,7 @@ of that option."
           ((equalp l-choice 'q) nil)
           (t (progn (speed-dial::print-menu-error) t)))))
 
-(defun run-command (a-command-pipe)
+(defun run-command-sh (a-command-pipe)
   "This function runs a shell command, via inferior-shell."
   (inferior-shell:run/ss `(inferior-shell:pipe (,a-command-pipe))))
 
