@@ -125,7 +125,8 @@ the program and/or going back one level."
     (force-output) ; Note: The prompt came later. Buffered output in combination with the read function perhaps?
     (let ((l-valid-options (get-menu-options (select (where :a-menu-id a-menu-id) *menu-items*))))
       (let ((l-retval (ask-for-option l-valid-options)))
-        (process-chosen-option l-retval l-valid-options a-menu-id)))))
+        (process-chosen-option l-retval l-valid-options a-menu-id)))
+    t))
 
 (defun process-chosen-option (a-option a-valid-options a-menu-id)
   "When a menu option is chosen, this function does the processing
@@ -143,7 +144,8 @@ of that option."
                     (format t "~a~%" (car l-message-with-duration))
                     (if (cadr l-message-with-duration)
                         (sleep (cadr l-message-with-duration)))
-                    (force-output))) ; Note: To solve another issue with buffered output.
+                    (force-output)
+                    t)) ; Note: To solve another issue with buffered output.
               (if (not (= (length l-command) 0))
                   (run-command l-command))
               (show-menu (get-child-menu-id a-option a-menu-id *menu-items*))))
@@ -156,7 +158,7 @@ of that option."
     (cond ((member l-choice a-valid-options) l-choice)
           ((equalp l-choice 'b) l-choice)
           ((equalp l-choice 'q) nil)
-          (t (progn (speed-dial::print-menu-error) t)))))
+          (t (speed-dial::print-menu-error)))))
 
 (defun run-command (a-command-pipe)
   "This function runs a shell command, via inferior-shell."
@@ -187,6 +189,7 @@ of that option."
   ;(print (speed-dial::load-lines-from-file *c-speed-dial-menu-items* *c-comment-chars*)))
   (progn
     (load-menu-items *c-speed-dial-menu-items*) ; TODO: implement the xdg_basedir logic
-    (show-menu 0)))
+    (show-menu 0)
+    t))
 
 (main)
