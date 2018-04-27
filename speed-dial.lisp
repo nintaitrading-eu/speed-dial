@@ -75,7 +75,7 @@ the program and/or going back one level."
                               :MENU-ID a-menu-id
                               :PARENT-MENU-ID (get-parent-menu-id a-menu-id *menu-items*)
                               :CHILD-MENU-ID a-menu-id
-                              :TITLE "back"
+                              :TITLE "Back"
                               :COMMAND ""
                               :MESSAGE ""
                               :MESSAGE-DURATION-SECONDS 0)))
@@ -83,7 +83,7 @@ the program and/or going back one level."
                               :MENU-ID a-menu-id
                               :PARENT-MENU-ID (get-parent-menu-id a-menu-id *menu-items*)
                               :CHILD-MENU-ID a-menu-id
-                              :TITLE "quit"
+                              :TITLE "Quit"
                               :COMMAND ""
                               :MESSAGE ""
                               :MESSAGE-DURATION-SECONDS 0)))))
@@ -91,7 +91,7 @@ the program and/or going back one level."
                         :MENU-ID a-menu-id
                         :PARENT-MENU-ID (get-parent-menu-id a-menu-id *menu-items*)
                         :CHILD-MENU-ID a-menu-id
-                        :TITLE "quit"
+                        :TITLE "Quit"
                         :COMMAND ""
                         :MESSAGE ""
                         :MESSAGE-DURATION-SECONDS 0))))))
