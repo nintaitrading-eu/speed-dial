@@ -17,5 +17,17 @@ This allows a user to build custom menu's in great detail, with the following po
 
 The menu-items are stored in speed-dial-menu-items.conf.
 
-TBD
+== Build status
 
+|==============================
+| branch | build status
+| speed-dial-cl-develop | image:https://travis-ci.org/nintaitrading-eu/speed-dial-cl.svg?branch=speed-dial-cl-develop["Build Status", link="https://travis-ci.org/nintaitrading-eu/speed-dial-cl"]
+| speed-dial-cl-release | image:https://travis-ci.org/nintaitrading-eu/speed-dial-cl.svg?branch=speed-dial-cl-release["Build Status", link="https://travis-ci.org/nintaitrading-eu/speed-dial-cl"]
+|==============================
+
+== Release
+
+|==============================
+| date | version
+| N/A |  N/A
+|==============================
